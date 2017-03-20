@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 
 namespace ConsoleAppOtau
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             const string serverIp = "192.168.96.52";
 //            const string serverIp = "192.168.96.57";
@@ -31,10 +29,9 @@ namespace ConsoleAppOtau
             else
                 Console.WriteLine($"some error");
 
-            string content;
-            GetIniFile(serverIp, tcpPort, out content);
-
-            var ep = GetExtentedPorts(serverIp, tcpPort);
+            var extendedPorts = GetExtentedPorts(serverIp, tcpPort);
+            foreach (var pair in extendedPorts)
+                Console.WriteLine($"otau {pair.Value} is attached to port {pair.Key}");
 
             Console.ReadLine();
         }
@@ -70,16 +67,23 @@ namespace ConsoleAppOtau
             if (iniContent.Substring(0, 15) == new string((char)255, 15))
                 return new Dictionary<int, string>(); // charon ahs never had ini file, so it hasn't got extentions so far
 
-
             if (iniContent.Substring(0, 22) == "[OpticalPortExtension]")
-                ParseIniContent(iniContent);
+                return ParseIniContent(iniContent);
 
             return null; // some unknown answer
         }
 
         private static Dictionary<int, string> ParseIniContent(string content)
         {
-            return new Dictionary<int, string>();
+            var result = new Dictionary<int, string>();
+            string[] separator = new[] { "\r\n" };
+            var lines = content.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 1; i < lines.Length-1; i++)
+            {
+                var parts = lines[i].Split('=');
+                result.Add(int.Parse(parts[0]), parts[1]);
+            }
+            return result;
         }
         private static bool GetIniFile(string serverIp, int tcpPort, out string content)
         {
