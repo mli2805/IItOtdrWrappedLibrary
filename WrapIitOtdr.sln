@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfExample", "WpfExample\Wp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{F7BEE8E7-FFD9-4136-B3B7-474B1D64108E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppOtau", "ConsoleAppOtau\ConsoleAppOtau.csproj", "{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{F7BEE8E7-FFD9-4136-B3B7-474B1D64108E}.Release|x64.Build.0 = Release|Any CPU
 		{F7BEE8E7-FFD9-4136-B3B7-474B1D64108E}.Release|x86.ActiveCfg = Release|Any CPU
 		{F7BEE8E7-FFD9-4136-B3B7-474B1D64108E}.Release|x86.Build.0 = Release|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Debug|x64.Build.0 = Debug|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Debug|x86.Build.0 = Debug|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Release|x64.ActiveCfg = Release|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Release|x64.Build.0 = Release|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Release|x86.ActiveCfg = Release|Any CPU
+		{60A9C1A3-77CC-4AF8-BA04-8F8521AF329E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
