@@ -1,4 +1,3 @@
-using System.Windows.Input;
 using Caliburn.Micro;
 using IitOtdrLibrary;
 
@@ -6,7 +5,7 @@ namespace WpfExample
 {
     public class ShellViewModel : Caliburn.Micro.PropertyChangedBase, IShell
     {
-        public OtdrLogic OtdrLogic { get; set; }
+        public OtdrManager OtdrManager { get; set; }
         private bool _isOtdrInited;
         public bool IsOtdrInited
         {
@@ -32,17 +31,20 @@ namespace WpfExample
 
         public void Init()
         {
+            OtdrManager = new OtdrManager();
+            if (!OtdrManager.LoadDll())
+                return;
             using (new WaitCursor())
             {
-                OtdrLogic = new OtdrLogic(IpAddress);
-                if (OtdrLogic.IsInitializedSuccessfully)
+                OtdrManager.InitializeLibrary(IpAddress);
+                if (OtdrManager.IsInitializedSuccessfully)
                     IsOtdrInited = true;
             }
         }
 
         public void LaunchOtdrParamView()
         {
-            var vm = new OtdrParamViewModel(OtdrLogic.IitOtdr);
+            var vm = new OtdrParamViewModel(OtdrManager.IitOtdr);
             IWindowManager windowManager = new WindowManager();
             windowManager.ShowDialog(vm);
         }

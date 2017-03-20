@@ -56,9 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IitOtdrWrap.cs" />
+    <Compile Include="IitOtdrWrapper.cs" />
     <Compile Include="Native.cs" />
-    <Compile Include="OtdrLogic.cs" />
+    <Compile Include="OtdrManager.cs" />
     <Compile Include="Parameters\OtdrParamsGetter.cs" />
     <Compile Include="Parameters\ParamCollectionForDistance.cs" />
     <Compile Include="Parameters\ParamCollectionForOtdr.cs" />

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace IitOtdrLibrary
 {
-    public class IitOtdrWrap
+    public class IitOtdrWrapper
     {
         //EXTERN_C __declspec(dllexport) void DllInit(char* pathDLL, void* logFile, TLenUnit* lenUnit);
         [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DllInit")]

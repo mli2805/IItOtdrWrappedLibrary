@@ -4,10 +4,10 @@ namespace IitOtdrLibrary
 {
     public class OtdrParamsGetter
     {
-        private readonly IitOtdrWrap _iitOtdr;
-        public OtdrParamsGetter(IitOtdrWrap iitOtdrWrap)
+        private readonly IitOtdrWrapper _iitOtdr;
+        public OtdrParamsGetter(IitOtdrWrapper iitOtdrWrapper)
         {
-            _iitOtdr = iitOtdrWrap;
+            _iitOtdr = iitOtdrWrapper;
         }
 
         public ParamCollectionForOtdr GetParamCollectionForOtdr()

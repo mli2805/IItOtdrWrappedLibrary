@@ -9,20 +9,23 @@ namespace ConsoleApp
 {
     class Program
     {
-        private static OtdrLogic _otdrLogic;
+        private static OtdrManager _otdrManager;
 
         static void Main()
         {
-            //_otdrLogic = new OtdrLogic("172.16.4.10");
-            //_otdrLogic = new OtdrLogic("192.168.88.101");
-            _otdrLogic = new OtdrLogic("192.168.96.52");
-            if (_otdrLogic.IsInitializedSuccessfully)
+            _otdrManager = new OtdrManager();
+            if (_otdrManager.LoadDll())
             {
-                var paramGetter = new OtdrParamsGetter(_otdrLogic.IitOtdr);
-                var paramSetForOtdr = paramGetter.GetParamCollectionForOtdr();
-                File.WriteAllLines(@"c:\temp\paramOtdr.txt", OtdrParamSetToFileContent(paramSetForOtdr).ToArray());
+                //_otdrManager.InitializeLibrary("172.16.4.10");
+                //_otdrManager.InitializeLibrary("192.168.88.101");
+                _otdrManager.InitializeLibrary("192.168.96.52");
+                if (_otdrManager.IsInitializedSuccessfully)
+                {
+                    var paramGetter = new OtdrParamsGetter(_otdrManager.IitOtdr);
+                    var paramSetForOtdr = paramGetter.GetParamCollectionForOtdr();
+                    File.WriteAllLines(@"c:\temp\paramOtdr.txt", OtdrParamSetToFileContent(paramSetForOtdr).ToArray());
+                }
             }
-
             Console.Write("Done.");
             Console.Read();
         }

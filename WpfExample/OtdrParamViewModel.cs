@@ -172,9 +172,9 @@ namespace WpfExample
         }
 
 
-        public OtdrParamViewModel(IitOtdrWrap otdrWrap)
+        public OtdrParamViewModel(IitOtdrWrapper otdrWrapper)
         {
-            var paramGetter = new OtdrParamsGetter(otdrWrap);
+            var paramGetter = new OtdrParamsGetter(otdrWrapper);
             _paramCollectionForOtdr = paramGetter.GetParamCollectionForOtdr();
             InitilizeInputControls();
         }
