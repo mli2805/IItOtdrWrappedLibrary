@@ -6,10 +6,12 @@ namespace ConsoleAppOtau
     {
         static void Main()
         {
-            const string serverIp = "192.168.96.52";
+            const string serverIp = "192.168.88.101";
+//            const string serverIp = "192.168.96.52";
 //            const string serverIp = "192.168.96.57";
 //            const string serverIp = "172.16.4.10";
 //            const int tcpPort = 11834;
+
             const int tcpPort = 23;
 
             var ch = new Charon(new NetAddress() { IpAddress = serverIp, TcpPort = tcpPort });
