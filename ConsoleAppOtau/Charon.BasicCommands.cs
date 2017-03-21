@@ -84,6 +84,14 @@ namespace ConsoleAppOtau
             IsLastCommandSuccessful = false;
             return -1;
         }
-
+        private string DictionaryToContent(Dictionary<int, NetAddress> extPorts)
+        {
+            if (extPorts.Count == 0)
+                return "\r\n";
+            var result = "[OpticalPortExtension]\r\n";
+            foreach (var extPort in extPorts)
+                result += $"{extPort.Key}={extPort.Value}\r\n";
+            return result;
+        }
     }
 }

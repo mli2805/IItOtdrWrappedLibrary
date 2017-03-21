@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -113,19 +114,21 @@ namespace ConsoleAppOtau
             extPorts.Remove(fromOpticalPort);
             var content = DictionaryToContent(extPorts);
             SendWriteIniCommand(content);
-            return true;
+            return IsLastCommandSuccessful;
         }
 
-        private string DictionaryToContent(Dictionary<int, NetAddress> extPorts)
+        public bool AttachOtauToPort(NetAddress additionalOtauAddress, int toOpticalPort)
         {
-            if (extPorts.Count == 0)
-                return "\r\n";
-            var result = "[OpticalPortExtension]\r\n";
-            foreach (var extPort in extPorts)
-                result += $"{extPort.Key}={extPort.Value}\r\n";
-            return result;
+            var extPorts = GetExtentedPorts();
+            if (extPorts.ContainsKey(toOpticalPort))
+            {
+                Console.WriteLine("This is extended port already. Denied.");
+                return true;
+            }
+            extPorts.Add(toOpticalPort, additionalOtauAddress);
+            var content = DictionaryToContent(extPorts);
+            SendWriteIniCommand(content);
+            return IsLastCommandSuccessful;
         }
-
-
     }
 }
