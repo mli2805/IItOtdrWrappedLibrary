@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -17,52 +16,35 @@ namespace ConsoleAppOtau
 //            const int tcpPort = 11834;
             const int tcpPort = 23;
 
-            string serial;
-            if (!GetSerial(serverIp, tcpPort, out serial))
-            {
-                Console.WriteLine($"error {serial}");
-                Console.ReadLine();
-                return;
-            }
-            Console.WriteLine($"serial: {serial}");
-            int portCount;
-            if (GetOwnPortCount(serverIp, tcpPort, out portCount))
-                Console.WriteLine($"own port count {portCount}");
+            var ch = new Charon(new NetAddress() { IpAddress = serverIp, TcpPort = tcpPort });
+            if (ch.Initialize())
+                Console.WriteLine($"charon {ch.Serial} has {ch.OwnPortCount} ports");
+
+            //reinit
+//            if (ch.Initialize())
+//                Console.WriteLine($"charon {ch.Serial} has {ch.OwnPortCount} ports");
+
+            var activePort = ch.GetExtendedActivePort();
+            if (activePort != -1)
+                Console.WriteLine($"{ch.NetAddress.IpAddress}:{ch.NetAddress.TcpPort} active port {activePort}");
             else
-                Console.WriteLine($"some error");
+                Console.WriteLine("some error");
 
+            var newActivePort = ch.SetExtendedActivePort(20);
+            Console.WriteLine($"New active port {newActivePort}");
 
+/* It works OK !!!
+ * 
             if (EraseAdditionalOtauFromIni(serverIp, tcpPort, 1))
                 Console.WriteLine($"detached successfully");
 
             if (InsertAdditionalOtauToIni(serverIp,tcpPort,1,"192.168.96.57",11834))
-                Console.WriteLine($"detached successfully");
-
-            var extendedPorts = GetExtentedPorts(serverIp, tcpPort);
-            foreach (var pair in extendedPorts)
-                Console.WriteLine($"otau {pair.Value} is attached to port {pair.Key}");
+                Console.WriteLine($"attached successfully");
+*/
 
             Console.ReadLine();
         }
 
-        private static bool GetSerial(string serverIp, int tcpPort, out string serial)
-        {
-            string cmd = "get_rtu_number\r\n";
-            return SendCommand(serverIp, tcpPort, cmd, out serial);
-        }
-
-        private static bool GetOwnPortCount(string serverIp, int tcpPort, out int ownPortCount)
-        {
-            string cmd = "otau_get_count_channels\r\n";
-            string answer;
-            ownPortCount = -1;
-            if (!SendCommand(serverIp, tcpPort, cmd, out answer))
-                return false;
-            if (int.TryParse(answer, out ownPortCount))
-               return true;
-            ownPortCount = -1;
-            return false;
-        }
 
         private static bool InsertAdditionalOtauToIni(string serverIp, int tcpPort, int fromOpticalPort, string addOtauIp, int addOtauTcpPort)
         {
