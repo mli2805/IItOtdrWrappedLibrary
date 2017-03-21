@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -100,6 +99,31 @@ namespace ConsoleAppOtau
                 return resultingPort;
             }
             return port;
+        }
+
+        public bool DetachOtauFromPort(int fromOpticalPort)
+        {
+            var extPorts = GetExtentedPorts();
+            if (!extPorts.ContainsKey(fromOpticalPort))
+            {
+                LastErrorMessage = "There is no such extended port. Nothing to do.";
+                return false;
+            }
+
+            extPorts.Remove(fromOpticalPort);
+            var content = DictionaryToContent(extPorts);
+            SendWriteIniCommand(content);
+            return true;
+        }
+
+        private string DictionaryToContent(Dictionary<int, NetAddress> extPorts)
+        {
+            if (extPorts.Count == 0)
+                return "\r\n";
+            var result = "[OpticalPortExtension]\r\n";
+            foreach (var extPort in extPorts)
+                result += $"{extPort.Key}={extPort.Value}\r\n";
+            return result;
         }
 
 

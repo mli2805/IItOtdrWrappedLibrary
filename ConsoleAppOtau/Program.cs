@@ -30,17 +30,24 @@ namespace ConsoleAppOtau
             else
                 Console.WriteLine("some error");
 
-            var newActivePort = ch.SetExtendedActivePort(20);
+            var newActivePort = ch.SetExtendedActivePort(14);
+            if (newActivePort == -1)
+            {
+                Console.WriteLine(ch.LastErrorMessage);
+                newActivePort = ch.GetExtendedActivePort();
+            }
             Console.WriteLine($"New active port {newActivePort}");
 
-/* It works OK !!!
- * 
-            if (EraseAdditionalOtauFromIni(serverIp, tcpPort, 1))
-                Console.WriteLine($"detached successfully");
 
-            if (InsertAdditionalOtauToIni(serverIp,tcpPort,1,"192.168.96.57",11834))
-                Console.WriteLine($"attached successfully");
-*/
+            if (ch.DetachOtauFromPort(2))
+                Console.WriteLine($"detached successfully");
+            else Console.WriteLine($"{ch.LastErrorMessage}");
+
+            /* It works OK !!!
+             * 
+                        if (InsertAdditionalOtauToIni(serverIp,tcpPort,1,"192.168.96.57",11834))
+                            Console.WriteLine($"attached successfully");
+            */
 
             Console.ReadLine();
         }
@@ -55,20 +62,6 @@ namespace ConsoleAppOtau
                 return true;
             }
             extPorts.Add(fromOpticalPort, $"{addOtauIp}:{addOtauTcpPort}");
-            var content = DictionaryToContent(extPorts);
-            string answer;
-            return SendWriteIniCommand(serverIp, tcpPort, content, out answer);
-        }
-        private static bool EraseAdditionalOtauFromIni(string serverIp, int tcpPort, int fromOpticalPort)
-        {
-            var extPorts = GetExtentedPorts(serverIp, tcpPort);
-            if (!extPorts.ContainsKey(fromOpticalPort))
-            {
-                Console.WriteLine("There is no such extended port. Nothing to do.");
-                return true;
-            }
-
-            extPorts.Remove(fromOpticalPort);
             var content = DictionaryToContent(extPorts);
             string answer;
             return SendWriteIniCommand(serverIp, tcpPort, content, out answer);

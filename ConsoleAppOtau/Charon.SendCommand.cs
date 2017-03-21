@@ -67,16 +67,13 @@ namespace ConsoleAppOtau
                 byte[] contentBytes = new byte[480];
                 var contentB = Encoding.ASCII.GetBytes(content);
                 Array.Copy(contentB, contentBytes, contentB.Length);
+
                 byte[] bytes256 = new byte[256];
                 Array.Copy(contentBytes, bytes256, 256);
-
-                Console.WriteLine("Sending : \n" + bytes256);
                 nwStream.Write(bytes256, 0, bytes256.Length);
 
                 byte[] bytes224 = new byte[224];
                 Array.Copy(contentBytes, 256, bytes224, 0, 224);
-
-                Console.WriteLine("Sending : \n" + bytes224);
                 nwStream.Write(bytes224, 0, bytes224.Length);
 
                 Thread.Sleep(1000);
