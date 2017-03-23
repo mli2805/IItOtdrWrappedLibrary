@@ -11,14 +11,21 @@ namespace ConsoleApp
     {
         private static OtdrManager _otdrManager;
 
-        static void Main()
+        static void Main(string[] args)
         {
             _otdrManager = new OtdrManager();
             if (_otdrManager.LoadDll())
             {
-                //_otdrManager.InitializeLibrary("172.16.4.10");
-                //_otdrManager.InitializeLibrary("192.168.88.101");
-                _otdrManager.InitializeLibrary("192.168.96.52");
+                string otdrAddress;
+                if (args.Length == 1)
+                    otdrAddress = args[0];
+                else
+                {
+                    //otdrAddress = "172.16.4.10";
+                    otdrAddress = "192.168.88.101";
+                    //otdrAddress = "192.168.96.52";
+                }
+                _otdrManager.InitializeLibrary(otdrAddress);
                 if (_otdrManager.IsInitializedSuccessfully)
                 {
                     var paramGetter = new OtdrParamsGetter(_otdrManager.IitOtdr);
@@ -41,7 +48,8 @@ namespace ConsoleApp
             return content;
         }
 
-        private static List<string> WaveLengthParamSetToFileContent(ParamCollectionForWaveLength paramCollectionForWaveLength)
+        private static List<string> WaveLengthParamSetToFileContent(
+            ParamCollectionForWaveLength paramCollectionForWaveLength)
         {
             var content = new List<string>();
             foreach (var distance in paramCollectionForWaveLength.Distances)
@@ -64,6 +72,5 @@ namespace ConsoleApp
             content.Add($"OB = {paramCollectionForDistance.Ob.ToString(CultureInfo.CurrentCulture)}");
             return content;
         }
-
     }
 }

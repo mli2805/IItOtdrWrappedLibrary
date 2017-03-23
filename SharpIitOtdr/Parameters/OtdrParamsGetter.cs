@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 
 namespace IitOtdrLibrary
@@ -43,8 +44,8 @@ namespace IitOtdrLibrary
                 PulseDurations = GetManyVariantsForParam((int)ServiceCmdParam.Pulse),  // Tp
                 AveragingTime = GetManyVariantsForParam((int)ServiceCmdParam.Time),   // Длительность измерения
                 AveragingNumber = GetManyVariantsForParam((int)ServiceCmdParam.Navr),  // Число усреднений
-                Bc = double.Parse(GetManyVariantsForParam((int)ServiceCmdParam.Bc)[0]), // 
-                Ob = double.Parse(GetManyVariantsForParam((int)ServiceCmdParam.Ri)[0]), //
+                Bc = double.Parse(GetManyVariantsForParam((int)ServiceCmdParam.Bc)[0], new CultureInfo("en-US")), // 
+                Ob = double.Parse(GetManyVariantsForParam((int)ServiceCmdParam.Ri)[0], new CultureInfo("en-US")), //
             };
         }
 
