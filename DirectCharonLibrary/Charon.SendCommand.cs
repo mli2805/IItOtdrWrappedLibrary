@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace ConsoleAppOtau
+namespace DirectCharonLibrary
 {
     public partial class Charon
     {

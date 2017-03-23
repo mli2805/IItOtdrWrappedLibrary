@@ -1,4 +1,5 @@
 ﻿using System;
+using DirectCharonLibrary;
 
 namespace ConsoleAppOtau
 {
@@ -6,8 +7,8 @@ namespace ConsoleAppOtau
     {
         static void Main()
         {
-            const string serverIp = "192.168.88.101";
-//            const string serverIp = "192.168.96.52";
+//            const string serverIp = "192.168.88.101";
+            const string serverIp = "192.168.96.52";
 //            const string serverIp = "192.168.96.57";
 //            const string serverIp = "172.16.4.10";
 //            const int tcpPort = 11834;
@@ -41,7 +42,7 @@ namespace ConsoleAppOtau
                 Console.WriteLine($"detached successfully");
             else Console.WriteLine($"{ch.LastErrorMessage}");
 
-            if (ch.AttachOtauToPort(new NetAddress("192.168.96.57", 11834) , 1))
+            if (ch.AttachOtauToPort(new NetAddress("192.168.96.57", 11834) , 2))
                 Console.WriteLine($"attached successfully");
             else Console.WriteLine($"{ch.LastErrorMessage}");
 

@@ -1,4 +1,4 @@
-namespace ConsoleAppOtau
+namespace DirectCharonLibrary
 {
     public class NetAddress
     {

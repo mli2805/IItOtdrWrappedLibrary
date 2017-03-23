@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConsoleAppOtau
+namespace DirectCharonLibrary
 {
     public partial class Charon
     {
