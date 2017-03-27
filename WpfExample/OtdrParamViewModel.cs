@@ -8,11 +8,6 @@ namespace WpfExample
 {
     public class OtdrParamViewModel : Screen
     {
-        private readonly ParamCollectionForOtdr _paramCollectionForOtdr;
-        private ParamCollectionForWaveLength _paramCollectionForUnit;
-        private ParamCollectionForDistance _paramCollectionForDistance;
-        private ParamCollectionForResolution _paramCollectionForResolution;
-
         #region Comboboxes
         private string _selectedUnit;
         private double _backscatteredCoefficient;
@@ -221,7 +216,7 @@ namespace WpfExample
 
         #endregion
 
-        private IitOtdrWrapper _otdrWrapper;
+        private readonly IitOtdrWrapper _otdrWrapper;
         private bool _isTimeToAverageSelected;
 
         public OtdrParamViewModel(IitOtdrWrapper otdrWrapper)
@@ -249,7 +244,7 @@ namespace WpfExample
 
             Resolutions = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Res).ToList();
             SelectedResolution = Resolutions.First();
-            PulseDurations = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Res).ToList();
+            PulseDurations = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
             SelectedPulseDuration = PulseDurations.First();
         }
 
@@ -277,18 +272,6 @@ namespace WpfExample
 
         private void ApplySelections()
         {
-            _paramCollectionForOtdr.SelectedUnit = SelectedUnit;
-            _paramCollectionForOtdr.Units[SelectedUnit].SelectedDistance = SelectedDistance;
-            _paramCollectionForOtdr.Units[SelectedUnit].Distances[SelectedDistance].SelectedResolution = SelectedResolution;
-
-            _paramCollectionForOtdr.Units[SelectedUnit].Distances[SelectedDistance].Resolutions[SelectedResolution].SelectedPulseDuration =
-                SelectedPulseDuration;
-            _paramCollectionForOtdr.Units[SelectedUnit].Distances[SelectedDistance].Resolutions[SelectedResolution].SelectedTimeToAverage =
-                SelectedPeriodToAverage;
-            _paramCollectionForOtdr.Units[SelectedUnit].Distances[SelectedDistance].Resolutions[SelectedResolution].SelectedMeasurementCountToAverage =
-                SelectedMeasCountToAverage;
-            _paramCollectionForOtdr.Units[SelectedUnit].Distances[SelectedDistance].Resolutions[SelectedResolution].Bc = BackscatteredCoefficient;
-            _paramCollectionForOtdr.Units[SelectedUnit].Distances[SelectedDistance].Resolutions[SelectedResolution].Ob = RefractiveIndex;
         }
 
         public void Cancel()

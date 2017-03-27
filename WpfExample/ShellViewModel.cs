@@ -22,8 +22,8 @@ namespace WpfExample
 
         public ShellViewModel()
         {
-//            IpAddress = "192.168.96.52";
-            IpAddress = "172.16.4.10";
+            IpAddress = "192.168.96.52";
+//            IpAddress = "172.16.4.10";
             //IpAddress = "192.168.88.101";
         }
 
