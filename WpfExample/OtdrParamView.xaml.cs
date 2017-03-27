@@ -16,14 +16,11 @@ namespace WpfExample
 
         private void RbCount_OnChecked(object sender, RoutedEventArgs e)
         {
-            RadioButton rb = (RadioButton) sender;
-            if (rb.Name == "RbCount")
-            {
-                RbCount.Foreground = Brushes.Black;
-                RbTime.Foreground = Brushes.DarkGray;
-                CbCounts.Foreground = Brushes.Black;
-                CbTimes.Foreground = Brushes.DarkGray;
-            }
+            RadioButton rb = (RadioButton)sender;
+            RbCount.Foreground  = rb.Name == "RbCount" ? Brushes.Black : Brushes.DarkGray;
+            CbCounts.Foreground = rb.Name == "RbCount" ? Brushes.Black : Brushes.DarkGray;
+            RbTime.Foreground   = rb.Name == "RbCount" ? Brushes.DarkGray : Brushes.Black;
+            CbTimes.Foreground  = rb.Name == "RbCount" ? Brushes.DarkGray : Brushes.Black;
         }
     }
 }

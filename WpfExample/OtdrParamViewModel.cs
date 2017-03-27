@@ -85,8 +85,8 @@ namespace WpfExample
                 _selectedDistance = value;
                 NotifyOfPropertyChange();
 
-                InitializeFromSelectedDistance();
                 _otdrWrapper.SetParam((int)ServiceCmdParam.Lmax, Distances.IndexOf(SelectedDistance));
+                InitializeFromSelectedDistance();
             }
         }
 
@@ -110,8 +110,8 @@ namespace WpfExample
                 _selectedResolution = value;
                 NotifyOfPropertyChange();
 
-                InitializeFromSelectedResolution();
                 _otdrWrapper.SetParam((int)ServiceCmdParam.Res, Resolutions.IndexOf(SelectedResolution));
+                InitializeFromSelectedResolution();
             }
         }
 
@@ -157,8 +157,13 @@ namespace WpfExample
                 _selectedMeasCountToAverage = value;
                 NotifyOfPropertyChange();
 
-                _otdrWrapper.SetParam((int)ServiceCmdParam.Navr, MeasCountsToAverage.IndexOf(SelectedMeasCountToAverage));
-                _selectedPeriodToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Time)[0];
+                if (!IsTimeToAverageSelected)
+                {
+                    _otdrWrapper.SetParam((int) ServiceCmdParam.Navr,
+                        MeasCountsToAverage.IndexOf(SelectedMeasCountToAverage));
+                    PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Time).ToList();
+                    SelectedPeriodToAverage = PeriodsToAverage.First();
+                }
             }
         }
 
@@ -182,8 +187,12 @@ namespace WpfExample
                 _selectedPeriodToAverage = value;
                 NotifyOfPropertyChange();
 
-                _otdrWrapper.SetParam((int)ServiceCmdParam.Time, PeriodsToAverage.IndexOf(SelectedPeriodToAverage));
-                _selectedMeasCountToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Navr)[0];
+                if (IsTimeToAverageSelected)
+                {
+                    _otdrWrapper.SetParam((int) ServiceCmdParam.Time, PeriodsToAverage.IndexOf(SelectedPeriodToAverage));
+                    MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Navr).ToList();
+                    SelectedMeasCountToAverage = MeasCountsToAverage.First();
+                }
             }
         }
 
@@ -197,6 +206,16 @@ namespace WpfExample
                 NotifyOfPropertyChange();
 
                 _otdrWrapper.SetParam((int)ServiceCmdParam.IsTime, IsTimeToAverageSelected ? 1 : 0);
+                if (IsTimeToAverageSelected)
+                {
+                    PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Time).ToList();
+                    SelectedPeriodToAverage = PeriodsToAverage.First();
+                }
+                else
+                {
+                    MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Navr).ToList();
+                    SelectedMeasCountToAverage = MeasCountsToAverage[2];
+                }
             }
         }
 
@@ -224,10 +243,10 @@ namespace WpfExample
 
         private void InitializeFromSelectedDistance()
         {
-            Resolutions = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Res).ToList();
-            SelectedResolution = Resolutions.First();
+            Resolutions = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Res).Skip(1).ToList();
+            SelectedResolution = Resolutions[1];
             PulseDurations = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
-            SelectedPulseDuration = PulseDurations.First();
+            SelectedPulseDuration = PulseDurations[3];
         }
 
         private void InitializeFromSelectedResolution()
@@ -242,7 +261,7 @@ namespace WpfExample
             else
             {
                 MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Navr).ToList();
-                SelectedMeasCountToAverage = MeasCountsToAverage.First();
+                SelectedMeasCountToAverage = MeasCountsToAverage[2];
             }
         }
 

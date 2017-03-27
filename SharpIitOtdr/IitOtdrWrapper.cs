@@ -18,12 +18,21 @@ namespace IitOtdrLibrary
         [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ServiceFunction")]
         public static extern int ServiceFunction(int cmd, ref int prm1, ref IntPtr prm2);
 
-        public void InitDll()
+        public bool InitDll()
         {
             string path = "";
             IntPtr logFile = IntPtr.Zero;
             IntPtr lenUnit = IntPtr.Zero;
-            DllInit(path, logFile, lenUnit);
+            try
+            {
+                DllInit(path, logFile, lenUnit);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
 
         public bool InitOtdr(ConnectionTypes type, string ip, int port)

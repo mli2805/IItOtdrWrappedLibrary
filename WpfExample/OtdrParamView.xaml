@@ -52,7 +52,7 @@
             <StackPanel>
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Width="30" Margin="5"/>
-                    <ComboBox DockPanel.Dock="Right" Margin="5,0" Height="22" Width="90" IsEnabled="{Binding ElementName=RbCount, Path=IsChecked}"
+                    <ComboBox DockPanel.Dock="Right" Margin="5,0" Height="22" Width="90" IsEnabled="{Binding ElementName=RbCounts, Path=IsChecked}"
                               Name="CbCounts" ItemsSource="{Binding MeasCountsToAverage}" SelectedItem="{Binding SelectedMeasCountToAverage, Mode=TwoWay}"/>
                     <RadioButton Name="RbCount" GroupName="Averaging" Content="Number of measurements to average - 4096*N" Margin="5" Checked="RbCount_OnChecked"/>
                 </DockPanel>
@@ -60,7 +60,7 @@
                     <TextBlock DockPanel.Dock="Right" Width="30" Margin="5"/>
                     <ComboBox DockPanel.Dock="Right" Margin="5,0" Height="22" Width="90" IsEnabled="{Binding ElementName=RbTime, Path=IsChecked}"
                               Name="CbTimes" ItemsSource="{Binding PeriodsToAverage}" SelectedItem="{Binding SelectedPeriodToAverage, Mode=TwoWay}"/>
-                    <RadioButton Name="RbTime" GroupName="Averaging" Content="Time to average" DockPanel.Dock="Left" Margin="5" 
+                    <RadioButton Name="RbTime" GroupName="Averaging" Content="Time to average" DockPanel.Dock="Left" Margin="5"  Checked="RbCount_OnChecked"
                                  IsChecked="{Binding IsTimeToAverageSelected, Mode=TwoWay}"/>
                 </DockPanel>
             </StackPanel>
