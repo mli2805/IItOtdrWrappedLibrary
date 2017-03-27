@@ -11,38 +11,38 @@
         <GroupBox Margin="5">
             <StackPanel Margin="0,5,0,0">
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Right" Width="30" Margin="5"/>
-                    <ComboBox DockPanel.Dock="Right" Width="100" Height="22" Margin="5,0"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5"/>
+                    <ComboBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
                               ItemsSource="{Binding Units}" SelectedItem="{Binding SelectedUnit, Mode=TwoWay}"/>
                     <TextBlock Text="Fiber type - wavelength:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text="dB"/>
-                    <TextBox DockPanel.Dock="Right" Width="100" Height="22" Margin="5,0"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="dB"/>
+                    <TextBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
                              Text="{Binding BackscatteredCoefficient}"/>
                     <TextBlock Text="Backscattered Coefficient:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text=""/>
-                    <TextBox DockPanel.Dock="Right" Width="100" Height="22" Margin="5,0"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text=""/>
+                    <TextBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
                              Text="{Binding RefractiveIndex}"/>
                     <TextBlock Text="Refractive index - n:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text="km"/>
-                    <ComboBox DockPanel.Dock="Right" Width="100" Height="22" Margin="5,0"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="km"/>
+                    <ComboBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
                               ItemsSource="{Binding Distances}" SelectedItem="{Binding SelectedDistance, Mode=TwoWay}"/>
                     <TextBlock Text="Distance range - Lmax:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text="m"/>
-                    <ComboBox DockPanel.Dock="Right" Width="100" Height="22" Margin="5,0"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="m"/>
+                    <ComboBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
                               ItemsSource="{Binding Resolutions}" SelectedItem="{Binding SelectedResolution, Mode=TwoWay}"/>
                     <TextBlock Text="Resolution - dL:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
-                    <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text="ns"/>
-                    <ComboBox DockPanel.Dock="Right" Width="100" Height="22" Margin="5,0"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="ns"/>
+                    <ComboBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
                               ItemsSource="{Binding PulseDurations}" SelectedItem="{Binding SelectedPulseDuration, Mode=TwoWay}"/>
                     <TextBlock Text="Pulse width - Tp:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
@@ -51,16 +51,16 @@
         <GroupBox Header="Measuring with averaging" Margin="5">
             <StackPanel>
                 <DockPanel>
-                    <RadioButton GroupName="Averaging" Content="Number of measurements to average - 4096*N" DockPanel.Dock="Left" Margin="5"/>
-                    <ComboBox DockPanel.Dock="Right" Margin="5,0,45,0" Height="22" Width="100"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="{Binding TimeCorrespondingToCount}"/>
+                    <ComboBox DockPanel.Dock="Right" Margin="5,0" Height="22" Width="90"
                               ItemsSource="{Binding MeasCountsToAverage}" SelectedItem="{Binding SelectedMeasCountToAverage, Mode=TwoWay}"/>
-                    <TextBlock/>
+                    <RadioButton GroupName="Averaging" Content="Number of measurements to average - 4096*N" Margin="5"/>
                 </DockPanel>
                 <DockPanel>
-                    <RadioButton GroupName="Averaging" Content="Time to average" DockPanel.Dock="Left" Margin="5"/>
-                    <ComboBox DockPanel.Dock="Right" Margin="5,0,45,0" Height="22" Width="100"
+                    <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="{Binding CountCorrespondingToTime}"/>
+                    <ComboBox DockPanel.Dock="Right" Margin="5,0" Height="22" Width="90"
                               ItemsSource="{Binding PeriodsToAverage}" SelectedItem="{Binding SelectedPeriodToAverage, Mode=TwoWay}"/>
-                    <TextBlock/>
+                    <RadioButton GroupName="Averaging" Content="Time to average" DockPanel.Dock="Left" Margin="5"/>
                 </DockPanel>
             </StackPanel>
         </GroupBox>
