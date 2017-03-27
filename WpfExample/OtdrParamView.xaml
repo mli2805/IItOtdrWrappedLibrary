@@ -60,7 +60,8 @@
                     <TextBlock DockPanel.Dock="Right" Width="77" Margin="5" Text="{Binding CountCorrespondingToTime}"/>
                     <ComboBox DockPanel.Dock="Right" Margin="5,0" Height="22" Width="90"
                               ItemsSource="{Binding PeriodsToAverage}" SelectedItem="{Binding SelectedPeriodToAverage, Mode=TwoWay}"/>
-                    <RadioButton GroupName="Averaging" Content="Time to average" DockPanel.Dock="Left" Margin="5"/>
+                    <RadioButton GroupName="Averaging" Content="Time to average" DockPanel.Dock="Left" Margin="5" 
+                                 IsChecked="{Binding IsTimeToAverageSelected}"/>
                 </DockPanel>
             </StackPanel>
         </GroupBox>

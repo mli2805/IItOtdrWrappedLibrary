@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace IitOtdrLibrary
@@ -45,6 +46,21 @@ namespace IitOtdrLibrary
 
             return Marshal.PtrToStringAnsi(unmanagedPointer);
         }
+
+        public string[] GetManyVariantsForParam(int paramCode)
+        {
+            string value = GetLineOfVariantsForParam(paramCode);
+            if (value == null)
+                return null;
+
+            // если вариант только 1 он возвращается без первого слэша
+            if (value[0] != '/')
+                return new[] { value };
+
+            var strs = value.Split('/');
+            return strs.Skip(1).ToArray();
+        }
+
 
         public void SetParam(int param, int indexInLine)
         {
