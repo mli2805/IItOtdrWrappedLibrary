@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using IitOtdrLibrary;
 
@@ -24,19 +25,25 @@ namespace WpfExample
 
         public ShellViewModel()
         {
-            IpAddress = "192.168.96.52";
-//            IpAddress = "172.16.4.10";
+//            IpAddress = "192.168.96.52";
+            IpAddress = "172.16.4.10";
             //IpAddress = "192.168.88.101";
         }
 
-        public void Init()
+        public async Task Init()
         {
             OtdrManager = new OtdrManager();
             if (!OtdrManager.LoadDll())
                 return;
+
+            await RunInitializationProcess();
+        }
+
+        private async Task RunInitializationProcess()
+        {
             using (new WaitCursor())
             {
-                OtdrManager.InitializeLibrary(IpAddress);
+                await Task.Run(()=> OtdrManager.InitializeLibrary(IpAddress));
                 if (OtdrManager.IsInitializedSuccessfully)
                     IsOtdrInited = true;
             }
