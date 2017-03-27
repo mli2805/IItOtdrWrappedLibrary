@@ -22,8 +22,6 @@ namespace WpfExample
         private string _selectedMeasCountToAverage;
         private List<string> _periodsToAverage;
         private string _selectedPeriodToAverage;
-        private string _timeCorrespondingToCount;
-        private string _countCorrespondingToTime;
 
         public List<string> Units { get; set; }
 
@@ -35,6 +33,8 @@ namespace WpfExample
                 if (value == _selectedUnit) return;
                 _selectedUnit = value;
                 NotifyOfPropertyChange();
+
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Unit, Units.IndexOf(SelectedUnit));
                 InitializeForSelectedUnit();
             }
         }
@@ -47,6 +47,7 @@ namespace WpfExample
                 if (value.Equals(_backscatteredCoefficient)) return;
                 _backscatteredCoefficient = value;
                 NotifyOfPropertyChange();
+                //                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, );
             }
         }
 
@@ -58,6 +59,9 @@ namespace WpfExample
                 if (value.Equals(_refractiveIndex)) return;
                 _refractiveIndex = value;
                 NotifyOfPropertyChange();
+
+                // как записать измененный параметр RI
+                //                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, );
             }
         }
 
@@ -80,7 +84,9 @@ namespace WpfExample
                 if (value == _selectedDistance) return;
                 _selectedDistance = value;
                 NotifyOfPropertyChange();
+
                 InitializeFromSelectedDistance();
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Lmax, Distances.IndexOf(SelectedDistance));
             }
         }
 
@@ -103,7 +109,9 @@ namespace WpfExample
                 if (value == _selectedResolution) return;
                 _selectedResolution = value;
                 NotifyOfPropertyChange();
+
                 InitializeFromSelectedResolution();
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Res, Resolutions.IndexOf(SelectedResolution));
             }
         }
 
@@ -150,18 +158,7 @@ namespace WpfExample
                 NotifyOfPropertyChange();
 
                 _otdrWrapper.SetParam((int)ServiceCmdParam.Navr, MeasCountsToAverage.IndexOf(SelectedMeasCountToAverage));
-                TimeCorrespondingToCount = _otdrWrapper.GetManyVariantsForParam((int) ServiceCmdParam.Time)[0];
-            }
-        }
-
-        public string TimeCorrespondingToCount
-        {
-            get { return _timeCorrespondingToCount; }
-            set
-            {
-                if (value == _timeCorrespondingToCount) return;
-                _timeCorrespondingToCount = value;
-                NotifyOfPropertyChange();
+                _selectedPeriodToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Time)[0];
             }
         }
 
@@ -186,18 +183,7 @@ namespace WpfExample
                 NotifyOfPropertyChange();
 
                 _otdrWrapper.SetParam((int)ServiceCmdParam.Time, PeriodsToAverage.IndexOf(SelectedPeriodToAverage));
-                CountCorrespondingToTime = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Navr)[0];
-            }
-        }
-
-        public string CountCorrespondingToTime
-        {
-            get { return _countCorrespondingToTime; }
-            set
-            {
-                if (value == _countCorrespondingToTime) return;
-                _countCorrespondingToTime = value;
-                NotifyOfPropertyChange();
+                _selectedMeasCountToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Navr)[0];
             }
         }
 
@@ -224,38 +210,40 @@ namespace WpfExample
             _otdrWrapper = otdrWrapper;
 
             IsTimeToAverageSelected = true;
-            Units = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Unit).ToList();
+            Units = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Unit).ToList();
             SelectedUnit = Units.First();
         }
 
         private void InitializeForSelectedUnit()
         {
-            _otdrWrapper.SetParam((int)ServiceCmdParam.Unit, Units.IndexOf(SelectedUnit));
-
-            _backscatteredCoefficient = double.Parse(_otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Bc)[0], new CultureInfo("en-US"));
-            _refractiveIndex = double.Parse(_otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Ri)[0], new CultureInfo("en-US"));
-            Distances = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Lmax).ToList();
+            _backscatteredCoefficient = double.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Bc)[0], new CultureInfo("en-US"));
+            _refractiveIndex = double.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Ri)[0], new CultureInfo("en-US"));
+            Distances = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Lmax).ToList();
             SelectedDistance = Distances.First();
         }
 
         private void InitializeFromSelectedDistance()
         {
-            _otdrWrapper.SetParam((int)ServiceCmdParam.Lmax, Distances.IndexOf(SelectedDistance));
-
-            Resolutions = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Res).ToList();
+            Resolutions = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Res).ToList();
             SelectedResolution = Resolutions.First();
-            PulseDurations = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
+            PulseDurations = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
             SelectedPulseDuration = PulseDurations.First();
         }
 
         private void InitializeFromSelectedResolution()
         {
-            _otdrWrapper.SetParam((int)ServiceCmdParam.Res, Resolutions.IndexOf(SelectedResolution));
-
-            MeasCountsToAverage = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Navr).ToList();
-            SelectedMeasCountToAverage = MeasCountsToAverage.First();
-            PeriodsToAverage = _otdrWrapper.GetManyVariantsForParam((int)ServiceCmdParam.Time).ToList();
-            SelectedPeriodToAverage = PeriodsToAverage.First();
+            IsTimeToAverageSelected =
+                int.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.IsTime)[0]) == 1;
+            if (IsTimeToAverageSelected)
+            {
+                PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Time).ToList();
+                SelectedPeriodToAverage = PeriodsToAverage.First();
+            }
+            else
+            {
+                MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Navr).ToList();
+                SelectedMeasCountToAverage = MeasCountsToAverage.First();
+            }
         }
 
         protected override void OnViewLoaded(object view)

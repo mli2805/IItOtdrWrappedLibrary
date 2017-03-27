@@ -47,7 +47,7 @@ namespace IitOtdrLibrary
             return Marshal.PtrToStringAnsi(unmanagedPointer);
         }
 
-        public string[] GetManyVariantsForParam(int paramCode)
+        public string[] ParseLineOfVariantsForParam(int paramCode)
         {
             string value = GetLineOfVariantsForParam(paramCode);
             if (value == null)
