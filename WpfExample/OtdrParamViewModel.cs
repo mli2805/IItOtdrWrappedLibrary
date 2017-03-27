@@ -246,7 +246,7 @@ namespace WpfExample
             Resolutions = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Res).Skip(1).ToList();
             SelectedResolution = Resolutions[1];
             PulseDurations = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
-            SelectedPulseDuration = PulseDurations[3];
+            SelectedPulseDuration = PulseDurations.Count > 3 ? PulseDurations[3] : PulseDurations.Last();
         }
 
         private void InitializeFromSelectedResolution()
