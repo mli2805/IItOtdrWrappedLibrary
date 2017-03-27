@@ -7,18 +7,15 @@ namespace WpfExample
     public class ShellViewModel : Caliburn.Micro.PropertyChangedBase, IShell
     {
         public OtdrManager OtdrManager { get; set; }
-        private bool _isOtdrInited;
-        public bool IsOtdrInited
+        private bool _isParamButtonEnabled;
+        public bool IsParamButtonEnabled
         {
-            get
-            {
-                return _isOtdrInited;
-            }
+            get { return _isParamButtonEnabled; }
             set
             {
-                if (Equals(value, _isOtdrInited)) return;
-                _isOtdrInited = value;
-                NotifyOfPropertyChange(()=>IsOtdrInited);
+                if (Equals(value, _isParamButtonEnabled)) return;
+                _isParamButtonEnabled = value;
+                NotifyOfPropertyChange(()=>IsParamButtonEnabled);
             }
         }
         public string IpAddress { get; set; }
@@ -45,7 +42,7 @@ namespace WpfExample
             {
                 await Task.Run(()=> OtdrManager.InitializeLibrary(IpAddress));
                 if (OtdrManager.IsInitializedSuccessfully)
-                    IsOtdrInited = true;
+                    IsParamButtonEnabled = true;
             }
         }
 

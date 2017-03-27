@@ -8,7 +8,7 @@
             <TextBox Width="150" Margin="5" Text="{Binding IpAddress}"/>
             <Button Name="Init" Content="Init" Width="100" Margin="5"/>
         </StackPanel>
-        <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsOtdrInited}"/>
+        <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsParamButtonEnabled}"/>
     </StackPanel>
 
 </Window>
