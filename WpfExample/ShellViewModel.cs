@@ -70,7 +70,7 @@ namespace WpfExample
 
             await RunInitializationProcess();
 
-            Message = "OTDR initialized successfully!";
+            Message = IsOtdrInitialized ? "OTDR initialized successfully!" : "OTDR initialization failed!";
         }
 
         private async Task RunInitializationProcess()
