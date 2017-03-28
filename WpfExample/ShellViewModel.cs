@@ -33,6 +33,20 @@ namespace WpfExample
                 NotifyOfPropertyChange(()=>IsOtdrInitialized);
             }
         }
+
+        private bool _isMeasurementInProgress;
+        public bool IsMeasurementInProgress
+        {
+            get { return _isMeasurementInProgress; }
+            set
+            {
+                if (Equals(value, _isMeasurementInProgress)) return;
+                _isMeasurementInProgress = value;
+                NotifyOfPropertyChange(()=> IsMeasurementInProgress);
+            }
+        }
+
+        
         public string IpAddress { get; set; }
 
         public ShellViewModel()
@@ -72,10 +86,19 @@ namespace WpfExample
         {
             using (new WaitCursor())
             {
+                IsMeasurementInProgress = true;
                 Message = "Wait, please...";
+
                 await Task.Run(() => OtdrManager.Measure());
+
+                IsMeasurementInProgress = false;
                 Message = "Done.";
             }
+        }
+
+        public void InterruptMeasurement()
+        {
+            OtdrManager.InterruptMeasurement();
         }
     }
 }

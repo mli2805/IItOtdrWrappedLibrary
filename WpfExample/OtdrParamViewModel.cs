@@ -48,7 +48,7 @@ namespace WpfExample
                 _backscatteredCoefficient = value;
                 NotifyOfPropertyChange();
 
-                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, (int)(BackscatteredCoefficient*10));
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Bc, (int)(BackscatteredCoefficient*100));
                 InitializeFromSelectedDistance();
             }
         }
@@ -112,7 +112,8 @@ namespace WpfExample
                 _selectedResolution = value;
                 NotifyOfPropertyChange();
 
-                _otdrWrapper.SetParam((int)ServiceCmdParam.Res, Resolutions.IndexOf(SelectedResolution));
+                var indexInLine = Resolutions.IndexOf(SelectedResolution) + 1; // AUTO was excluded
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Res, indexInLine);
                 InitializeFromSelectedResolution();
             }
         }
@@ -136,6 +137,7 @@ namespace WpfExample
                 if (value == _selectedPulseDuration) return;
                 _selectedPulseDuration = value;
                 NotifyOfPropertyChange();
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Pulse, PulseDurations.IndexOf(SelectedPulseDuration));
             }
         }
 

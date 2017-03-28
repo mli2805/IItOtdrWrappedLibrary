@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IitOtdrWrapper.cs" />
+    <Compile Include="IitOtdrWrapper.Measure.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="OtdrManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

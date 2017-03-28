@@ -1,6 +1,6 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace IitOtdrLibrary
 {
@@ -36,10 +36,58 @@ namespace IitOtdrLibrary
             IsInitializedSuccessfully = true;
         }
 
+        private bool _isMeasurementCanceled;
+        private IntPtr _sorData = IntPtr.Zero;
         public bool Measure()
         {
-            Thread.Sleep(3000);
+            if (!IitOtdr.PrepareMeasurement(true))
+                return false;
+
+            try
+            {
+                bool hasMoreSteps;
+                do
+                {
+                    if (_isMeasurementCanceled)
+                    {
+                        break;
+                    }
+
+                    hasMoreSteps = IitOtdr.DoMeasurementStep(ref _sorData);
+                } while (hasMoreSteps);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            GetLastSorData();
             return true;
+        }
+
+        public void GetLastSorData()
+        {
+            int bufferLength = IitOtdr.GetSorDataSize(_sorData);
+            if (bufferLength == -1)
+            {
+                Console.WriteLine("_sorData is null");
+                return;
+            }
+            byte[] buffer = new byte[bufferLength];
+
+            var size = IitOtdr.GetSordata(_sorData, buffer, bufferLength);
+            if (size == -1)
+            {
+                Console.WriteLine("Error in GetLastSorData");
+                return;
+            }
+            File.WriteAllBytes(@"c:\temp\123.sor", buffer);
+        } 
+
+        public void InterruptMeasurement()
+        {
+            _isMeasurementCanceled = true;
         }
 
     }

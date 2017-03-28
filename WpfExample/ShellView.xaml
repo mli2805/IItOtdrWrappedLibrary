@@ -9,7 +9,8 @@
             <Button Name="Init" Content="Init" Width="100" Margin="5"/>
         </StackPanel>
         <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
-        <Button Name="StartMeasurement" Content="Measure" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+        <Button Name="StartMeasurement" Content="Start measurement" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+        <Button Name="InterruptMeasurement" Content="Interrupt measurement" Margin="5" IsEnabled="{Binding IsMeasurementInProgress}"/>
         <TextBlock Text="{Binding Message}" Margin="5"/>
     </StackPanel>
 
