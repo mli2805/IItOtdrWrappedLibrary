@@ -59,13 +59,8 @@
     <Compile Include="IitOtdrWrapper.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="OtdrManager.cs" />
-    <Compile Include="Parameters\OtdrParamsGetter.cs" />
-    <Compile Include="Parameters\ParamCollectionForDistance.cs" />
-    <Compile Include="Parameters\ParamCollectionForResolution.cs" />
-    <Compile Include="Parameters\ParamCollectionForOtdr.cs" />
-    <Compile Include="Parameters\ParamCollectionForWaveLength.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parameters\ServiceCmdParam.cs" />
+    <Compile Include="ServiceCmdParam.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -18,6 +18,30 @@ namespace IitOtdrLibrary
         [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ServiceFunction")]
         public static extern int ServiceFunction(int cmd, ref int prm1, ref IntPtr prm2);
 
+
+
+        // EXTERN_C __declspec(dllexport) int MeasPrepare(int mMode);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "MeasPrepare")]
+        public static extern int MeasPrepare(int isFast);
+
+        // EXTERN_C __declspec(dllexport) int MeasStep(TSorData** rezSD);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "MeasStep")]
+        public static extern int MeasStep(ref IntPtr sorData);
+        // EXTERN_C __declspec(dllexport) int MeasStop(TSorData** fullSD, int stopMode);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "MeasStop")]
+        public static extern int MeasStop(ref IntPtr sorData, int isImmediateStop);
+
+
+
+        // EXTERN_C __declspec(dllexport) long GetSorSize(TSorData* sorData);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetSorSize")]
+        public static extern int GetSorSize(IntPtr sorData);
+        // EXTERN_C __declspec(dllexport) long GetSorData(TSorData* sorData, char* buffer, long bufferLength);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "GetSorData")]
+        public static extern int GetSorData(IntPtr sorData, string buffer, int bufferLength);
+
+
+
         public bool InitDll()
         {
             string path = "";
