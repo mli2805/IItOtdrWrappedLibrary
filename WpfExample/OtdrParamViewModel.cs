@@ -232,9 +232,47 @@ namespace WpfExample
         {
             _otdrWrapper = otdrWrapper;
 
-            IsTimeToAverageSelected = true;
-            Units = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Unit).ToList();
-            SelectedUnit = Units.First();
+            InitializeControls();
+        }
+
+        private void InitializeControls()
+        {
+            Units = _otdrWrapper.ParseLineOfVariantsForParam((int) ServiceCmdParam.Unit).ToList();
+            _selectedUnit = Units.First();
+
+            _backscatteredCoefficient = double.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Bc)[0], new CultureInfo("en-US"));
+            _refractiveIndex = double.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Ri)[0], new CultureInfo("en-US"));
+
+            Distances = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Lmax).ToList();
+            var activeDistance = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveLmax);
+            var index = Distances.IndexOf(activeDistance);
+            _selectedDistance = index != -1 ? Distances[index] : Distances.First();
+
+            Resolutions = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Res).Skip(1).ToList();
+            var activeResolution = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveRes);
+            index = Resolutions.IndexOf(activeResolution);
+            _selectedResolution = index != -1 ? Resolutions[index] : Resolutions[1];
+
+            PulseDurations = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
+            var activePulseDuration = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActivePulse);
+            index = PulseDurations.IndexOf(activePulseDuration);
+            _selectedPulseDuration = index != -1 ? PulseDurations[index] : PulseDurations.First();
+
+            IsTimeToAverageSelected = int.Parse(_otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveIsTime)) == 1;
+            if (IsTimeToAverageSelected)
+            {
+                PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Time).ToList();
+                var activePeriodToAverage = _otdrWrapper.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveTime);
+                index = PeriodsToAverage.IndexOf(activePeriodToAverage);
+                _selectedPeriodToAverage = index != -1 ? PeriodsToAverage[index] : PeriodsToAverage.First();
+            }
+            else
+            {
+                MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Navr).ToList();
+                var activeMeasCountToAverage = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveNavr);
+                index = MeasCountsToAverage.IndexOf(activeMeasCountToAverage);
+                _selectedMeasCountToAverage = index != -1 ? MeasCountsToAverage[index] : MeasCountsToAverage.First();
+            }
         }
 
         private void InitializeForSelectedUnit()
@@ -242,15 +280,22 @@ namespace WpfExample
             _backscatteredCoefficient = double.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Bc)[0], new CultureInfo("en-US"));
             _refractiveIndex = double.Parse(_otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Ri)[0], new CultureInfo("en-US"));
             Distances = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Lmax).ToList();
-            SelectedDistance = Distances.First();
+            var activeDistance = _otdrWrapper.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveLmax);
+            var index = Distances.IndexOf(activeDistance);
+            SelectedDistance = index != -1 ? Distances[index] : Distances.First();
         }
 
         private void InitializeFromSelectedDistance()
         {
             Resolutions = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Res).Skip(1).ToList();
-            SelectedResolution = Resolutions[1];
+            var activeResolution = _otdrWrapper.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveRes);
+            var index1 = Resolutions.IndexOf(activeResolution);
+            SelectedResolution = index1 != -1 ? Resolutions[index1] : Resolutions[1];
+
             PulseDurations = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Pulse).ToList();
-            SelectedPulseDuration = PulseDurations.Count > 3 ? PulseDurations[3] : PulseDurations.Last();
+            var activePulseDuration = _otdrWrapper.GetLineOfVariantsForParam((int) ServiceCmdParam.ActivePulse);
+            var index = PulseDurations.IndexOf(activePulseDuration);
+            SelectedPulseDuration = index != -1 ? PulseDurations[index] : PulseDurations.First();
         }
 
         private void InitializeFromSelectedResolution()
@@ -274,18 +319,7 @@ namespace WpfExample
             DisplayName = "Measurement parameters";
         }
 
-        public void SetParams()
-        {
-            ApplySelections();
-
-            TryClose();
-        }
-
-        private void ApplySelections()
-        {
-        }
-
-        public void Cancel()
+        public void Close()
         {
             TryClose();
         }
