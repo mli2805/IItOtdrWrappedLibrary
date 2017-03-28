@@ -22,6 +22,7 @@ namespace WpfExample
         private string _selectedMeasCountToAverage;
         private List<string> _periodsToAverage;
         private string _selectedPeriodToAverage;
+        private bool _isTimeToAverageSelected;
 
         public List<string> Units { get; set; }
 
@@ -222,11 +223,10 @@ namespace WpfExample
                 }
             }
         }
-
+        public bool IsMeasCountToAverageSelected { get; set; }
         #endregion
 
         private readonly IitOtdrWrapper _otdrWrapper;
-        private bool _isTimeToAverageSelected;
 
         public OtdrParamViewModel(IitOtdrWrapper otdrWrapper)
         {
@@ -258,13 +258,16 @@ namespace WpfExample
             index = PulseDurations.IndexOf(activePulseDuration);
             _selectedPulseDuration = index != -1 ? PulseDurations[index] : PulseDurations.First();
 
-            IsTimeToAverageSelected = int.Parse(_otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveIsTime)) == 1;
-            if (IsTimeToAverageSelected)
+            _isTimeToAverageSelected = int.Parse(_otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveIsTime)) == 1;
+            if (_isTimeToAverageSelected)
             {
                 PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Time).ToList();
                 var activePeriodToAverage = _otdrWrapper.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveTime);
                 index = PeriodsToAverage.IndexOf(activePeriodToAverage);
                 _selectedPeriodToAverage = index != -1 ? PeriodsToAverage[index] : PeriodsToAverage.First();
+
+                MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Navr).ToList();
+                _selectedMeasCountToAverage = MeasCountsToAverage.First();
             }
             else
             {
@@ -272,7 +275,11 @@ namespace WpfExample
                 var activeMeasCountToAverage = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveNavr);
                 index = MeasCountsToAverage.IndexOf(activeMeasCountToAverage);
                 _selectedMeasCountToAverage = index != -1 ? MeasCountsToAverage[index] : MeasCountsToAverage.First();
+
+                PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Time).ToList();
+                _selectedPeriodToAverage = PeriodsToAverage.First();
             }
+            IsMeasCountToAverageSelected = !IsTimeToAverageSelected;
         }
 
         private void InitializeForSelectedUnit()

@@ -14,7 +14,7 @@ namespace WpfExample
             InitializeComponent();
         }
 
-        private void RbCount_OnChecked(object sender, RoutedEventArgs e)
+        private void RadioButtonOnChecked(object sender, RoutedEventArgs e)
         {
             RadioButton rb = (RadioButton)sender;
             RbCount.Foreground  = rb.Name == "RbCount" ? Brushes.Black : Brushes.DarkGray;

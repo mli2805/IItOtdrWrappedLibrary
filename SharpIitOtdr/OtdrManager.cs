@@ -9,18 +9,19 @@ namespace IitOtdrLibrary
         public IitOtdrWrapper IitOtdr { get; set; }
         public bool IsInitializedSuccessfully;
 
-        public bool LoadDll()
+        public string LoadDll()
         {
             var dllPath = "iit_otdr.dll";
             var handle = Native.LoadLibrary(dllPath);
             if (handle == IntPtr.Zero)
             {
                 int errorCode = Marshal.GetLastWin32Error();
-                Console.WriteLine($"Failed to load library {dllPath} (code: {errorCode})");
-                return false;
+                var result = $"Failed to load library {dllPath} (code: {errorCode})";
+                Console.WriteLine(result);
+                return result;
             }
             Console.WriteLine($"Library {dllPath} loaded successfully");
-            return true;
+            return "";
         }
         public void InitializeLibrary(string ipAddress)
         {

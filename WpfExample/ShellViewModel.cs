@@ -58,11 +58,19 @@ namespace WpfExample
 
         public async Task Init()
         {
+            Message = "Wait, please...";
+
             OtdrManager = new OtdrManager();
-            if (!OtdrManager.LoadDll())
+            var initializationResult = OtdrManager.LoadDll();
+            if (initializationResult != "")
+            {
+                Message = initializationResult;
                 return;
+            }
 
             await RunInitializationProcess();
+
+            Message = "OTDR initialized successfully!";
         }
 
         private async Task RunInitializationProcess()
@@ -92,7 +100,7 @@ namespace WpfExample
                 await Task.Run(() => OtdrManager.Measure());
 
                 IsMeasurementInProgress = false;
-                Message = "Done.";
+                Message = "Measurement is finished.";
             }
         }
 
