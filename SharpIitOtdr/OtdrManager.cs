@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace IitOtdrLibrary
 {
@@ -33,6 +34,12 @@ namespace IitOtdrLibrary
                 return;
 
             IsInitializedSuccessfully = true;
+        }
+
+        public bool Measure()
+        {
+            Thread.Sleep(3000);
+            return true;
         }
 
     }
