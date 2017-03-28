@@ -47,7 +47,9 @@ namespace WpfExample
                 if (value.Equals(_backscatteredCoefficient)) return;
                 _backscatteredCoefficient = value;
                 NotifyOfPropertyChange();
-                //                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, );
+
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, (int)(BackscatteredCoefficient*10));
+                InitializeFromSelectedDistance();
             }
         }
 
@@ -60,8 +62,8 @@ namespace WpfExample
                 _refractiveIndex = value;
                 NotifyOfPropertyChange();
 
-                // как записать измененный параметр RI
-                //                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, );
+                _otdrWrapper.SetParam((int)ServiceCmdParam.Ri, (int)(RefractiveIndex*100000));
+                InitializeFromSelectedDistance();
             }
         }
 

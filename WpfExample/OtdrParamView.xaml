@@ -19,13 +19,13 @@
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text="dB"/>
                     <TextBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
-                             Text="{Binding BackscatteredCoefficient}"/>
+                             Text="{Binding BackscatteredCoefficient, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Backscattered Coefficient:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Width="30" Margin="5" Text=""/>
                     <TextBox DockPanel.Dock="Right" Width="90" Height="22" Margin="5,0"
-                             Text="{Binding RefractiveIndex}"/>
+                             Text="{Binding RefractiveIndex, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Refractive index - n:" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel>
