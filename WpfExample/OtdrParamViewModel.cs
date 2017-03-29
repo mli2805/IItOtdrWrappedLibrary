@@ -312,12 +312,22 @@ namespace WpfExample
             if (IsTimeToAverageSelected)
             {
                 PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Time).ToList();
-                SelectedPeriodToAverage = PeriodsToAverage.First();
+                var activePeriodToAverage = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveTime);
+                var index = PeriodsToAverage.IndexOf(activePeriodToAverage);
+                SelectedPeriodToAverage = index != -1 ? PeriodsToAverage[index] : PeriodsToAverage.First();
+
+                MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Navr).ToList();
+                SelectedMeasCountToAverage = MeasCountsToAverage.First();
             }
             else
             {
                 MeasCountsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Navr).ToList();
-                SelectedMeasCountToAverage = MeasCountsToAverage[2];
+                var activeMeasCountToAverage = _otdrWrapper.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveNavr);
+                var index = MeasCountsToAverage.IndexOf(activeMeasCountToAverage);
+                SelectedMeasCountToAverage = index != -1 ? MeasCountsToAverage[index] : MeasCountsToAverage.First();
+
+                PeriodsToAverage = _otdrWrapper.ParseLineOfVariantsForParam((int)ServiceCmdParam.Time).ToList();
+                SelectedPeriodToAverage = PeriodsToAverage.First();
             }
         }
 
