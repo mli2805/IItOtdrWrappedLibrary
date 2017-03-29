@@ -28,6 +28,22 @@ namespace IitOtdrLibrary
         public static extern int GetSorData(IntPtr sorData, byte[] buffer, int bufferLength);
 
 
+        public void ForceMeasurementWithLmax()
+        {
+            string lmaxString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveLmax);
+            int lmax;
+            if (!int.TryParse(lmaxString, out lmax))
+                lmax = 200;
+            string riString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveRi);
+            int ri;
+            if (!int.TryParse(riString, out ri))
+                ri = 147500;
+
+            const double lightSpeed = 0.000299792458; // km/ns
+            int lmaxNs = (int)(lmax * ri / lightSpeed);
+            SetParam(746, lmaxNs); // SERVICE_CMD_PARAM_MEAS_LMAX_SET	
+        }
+
         public bool PrepareMeasurement(bool isAver)
         {
             var error = MeasPrepare(isAver ? 601 : 600);
