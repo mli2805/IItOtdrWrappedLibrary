@@ -107,6 +107,7 @@ namespace WpfExample
         public void InterruptMeasurement()
         {
             OtdrManager.InterruptMeasurement();
+            Message = "Stop command is sent";
         }
     }
 }

@@ -37,10 +37,16 @@ namespace IitOtdrLibrary
             IsInitializedSuccessfully = true;
         }
 
+        private readonly object _lockObj = new object();
         private bool _isMeasurementCanceled;
         private IntPtr _sorData = IntPtr.Zero;
         public bool Measure()
         {
+            lock (_lockObj)
+            {
+                _isMeasurementCanceled = false;
+            }
+
             if (!IitOtdr.PrepareMeasurement(true))
                 return false;
 
@@ -49,13 +55,18 @@ namespace IitOtdrLibrary
                 bool hasMoreSteps;
                 do
                 {
-                    if (_isMeasurementCanceled)
+                    lock (_lockObj)
                     {
-                        break;
+                        if (_isMeasurementCanceled)
+                        {
+                            IitOtdr.StopMeasurement(true);
+                            break;
+                        }
                     }
 
                     hasMoreSteps = IitOtdr.DoMeasurementStep(ref _sorData);
-                } while (hasMoreSteps);
+                }
+                while (hasMoreSteps);
             }
             catch (Exception e)
             {
@@ -65,6 +76,14 @@ namespace IitOtdrLibrary
 
             GetLastSorData();
             return true;
+        }
+
+        public void InterruptMeasurement()
+        {
+            lock (_lockObj)
+            {
+                _isMeasurementCanceled = true;
+            }
         }
 
         public void GetLastSorData()
@@ -84,12 +103,6 @@ namespace IitOtdrLibrary
                 return;
             }
             File.WriteAllBytes(@"c:\temp\123.sor", buffer);
-        } 
-
-        public void InterruptMeasurement()
-        {
-            _isMeasurementCanceled = true;
         }
-
     }
 }
