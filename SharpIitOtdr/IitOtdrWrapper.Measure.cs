@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using Optixsoft.SorExaminer.OtdrDataFormat;
+using Optixsoft.SorExaminer.OtdrDataFormat.IO;
 
 namespace IitOtdrLibrary
 {
@@ -28,7 +31,16 @@ namespace IitOtdrLibrary
         public static extern int GetSorData(IntPtr sorData, byte[] buffer, int bufferLength);
 
 
-        public void ForceMeasurementWithLmax()
+        // EXTERN_C __declspec(dllexport) TSorData* CreateSorPtr(const char* buffer, long bufferLength);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "CreateSorPtr")]
+        public static extern IntPtr CreateSorPtr(byte[] buffer, int bufferLength);
+
+        // EXTERN_C __declspec(dllexport) void DestroySorPtr(TSorData* sorData);
+        [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DestroySorPtr")]
+        public static extern void DestroySorPtr(IntPtr sorData);
+
+
+        public int ConvertLmaxKmToNs()
         {
             string lmaxString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveLmax);
             int lmax;
@@ -40,8 +52,29 @@ namespace IitOtdrLibrary
                 ri = 147500;
 
             const double lightSpeed = 0.000299792458; // km/ns
-            int lmaxNs = (int)(lmax * ri / lightSpeed);
-            SetParam(746, lmaxNs); // SERVICE_CMD_PARAM_MEAS_LMAX_SET	
+            int lmaxNs = (int) (lmax * ri / lightSpeed);
+            return lmaxNs;
+        }
+
+        public int ConvertLmaxOwtToNs(byte[] data)
+        {
+            const int owtsInTwoWayNs = 5;
+
+            var sorData = ToSorData(data);
+            int lmaxOwt = sorData.IitParameters.DistnaceRangeUser;
+            if (lmaxOwt == -1)
+                lmaxOwt = (int)sorData.FixedParameters.AcquisitionRange;
+
+            return lmaxOwt / owtsInTwoWayNs;
+        }
+
+
+        public OtdrDataKnownBlocks ToSorData(byte[] data)
+        {
+            using (var stream = new MemoryStream(data))
+            {
+                return new OtdrDataKnownBlocks(new OtdrReader(stream).Data);
+            }
         }
 
         public bool PrepareMeasurement(bool isAver)
@@ -75,5 +108,16 @@ namespace IitOtdrLibrary
         {
             return GetSorData(sorData, buffer, bufferLength);
         }
+
+        public IntPtr SetBaseSorData(byte[] buffer)
+        {
+            return CreateSorPtr(buffer, buffer.Length);
+        }
+
+        public void FreeBaseSorDataMemory(IntPtr sorData)
+        {
+            DestroySorPtr(sorData);
+        }
+
     }
 }

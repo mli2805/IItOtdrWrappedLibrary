@@ -4,13 +4,40 @@
         SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
 
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBox Width="150" Margin="5" Text="{Binding IpAddress}"/>
-            <Button Name="Init" Content="Init" Width="100" Margin="5"/>
-        </StackPanel>
-        <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
-        <Button Name="StartMeasurement" Content="Start measurement" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
-        <Button Name="InterruptMeasurement" Content="Interrupt measurement" Margin="5" IsEnabled="{Binding IsMeasurementInProgress}"/>
+        <GroupBox Header="Initialization" Margin="5">
+            <StackPanel>
+                <TextBox Margin="5" Text="{Binding IpAddress}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="100" Margin="5" Text="Port 1500"/>
+                    <Button Name="InitOtdr" Content="Init OTDR" Width="150" Margin="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Width="100" Margin="5" Text="{Binding OtauPort}"/>
+                    <Button Name="InitOtau" Content="Init Otau" Margin="5" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Width="100" Margin="5" Text="{Binding ActivePort}" IsEnabled="{Binding IsOtauInitialized}"/>
+                    <Button Name="SetActivePort" Content="Set active port" Margin="5" Width="150" IsEnabled="{Binding IsOtauInitialized}"/>
+                </StackPanel>
+                <TextBlock Margin="5" Text="{Binding CharonInfo}" Background="AliceBlue"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="MeasurementClient" Margin="5">
+            <StackPanel>
+                <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+                <CheckBox IsChecked="{Binding ShouldForceLmax, Mode=TwoWay}" Content="Force Lmax" Margin="5,8,5,5" IsEnabled="{Binding IsOtdrInitialized}"/>
+                <Button Name="StartMeasurement" Content="Start measurement" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="As monitoring" Margin="5">
+            <StackPanel>
+                <Button Name="StartMeasurementWithBase" Content="Start measurement with base" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+                <TextBox Name="BaseFileNameTextBox" Text="{Binding BaseFileName}" Margin="5"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Margin="5">
+            <Button Name="InterruptMeasurement" Content="Interrupt measurement" Margin="5" IsEnabled="{Binding IsMeasurementInProgress}"/>
+        </GroupBox>
         <TextBlock Text="{Binding Message}" Margin="5"/>
     </StackPanel>
 

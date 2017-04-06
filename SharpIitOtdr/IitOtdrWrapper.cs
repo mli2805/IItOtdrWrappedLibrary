@@ -74,11 +74,33 @@ namespace IitOtdrLibrary
 
         public void SetParam(int param, int indexInLine)
         {
-            int cmd = 705;
+            int cmd = 705; // SERVICE_CMD_SETPARAM
             int prm1 = param;
             IntPtr prm2 = new IntPtr(indexInLine);
             if (ServiceFunction(cmd, ref prm1, ref prm2) != 0)
                 Console.WriteLine("Set parameter error!");
+        }
+
+        public bool SetParamFromSor(ref IntPtr baseSorData)
+        {
+            int cmd = 708; // SERVICE_CMD_SETPARAM_FROM_SOR
+            int reserved = 0;
+
+            var result = ServiceFunction(cmd, ref reserved, ref baseSorData);
+            if (result != 0)
+                Console.WriteLine("Set parameter error!");
+            return result == 0;
+        }
+
+        public bool ForceLmaxNs(int lmaxNs)
+        {
+            int cmd = 746; // SERVICE_CMD_PARAM_MEAS_LMAX_SET
+            IntPtr reserved = new IntPtr();
+            var result = ServiceFunction(cmd, ref lmaxNs, ref reserved);
+            if (result != 0)
+                Console.WriteLine("Set parameter error!");
+            return result == 0;
+
         }
 
     }

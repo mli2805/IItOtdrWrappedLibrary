@@ -37,10 +37,34 @@ namespace IitOtdrLibrary
             IsInitializedSuccessfully = true;
         }
 
+        public bool MeasureWithBase(string filename)
+        {
+            byte[] buffer = File.ReadAllBytes(filename);
+            var baseSorData = IitOtdr.SetBaseSorData(buffer);
+
+            if (IitOtdr.SetParamFromSor(ref baseSorData))
+            {
+                IitOtdr.ForceLmaxNs(IitOtdr.ConvertLmaxOwtToNs(buffer));
+                return Measure();
+            }
+
+            IitOtdr.FreeBaseSorDataMemory(baseSorData);
+            return true;
+        }
+
+        public bool DoManualMeasurement(bool shouldForceLmax)
+        {
+            if (shouldForceLmax)
+                IitOtdr.ForceLmaxNs(IitOtdr.ConvertLmaxKmToNs());
+
+            return Measure();
+        }
+
         private readonly object _lockObj = new object();
         private bool _isMeasurementCanceled;
         private IntPtr _sorData = IntPtr.Zero;
-        public bool Measure()
+
+        private bool Measure()
         {
             lock (_lockObj)
             {
@@ -74,7 +98,6 @@ namespace IitOtdrLibrary
                 return false;
             }
 
-            GetLastSorData();
             return true;
         }
 
