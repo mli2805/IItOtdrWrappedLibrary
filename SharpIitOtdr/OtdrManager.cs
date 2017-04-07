@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
+using Optixsoft.SorExaminer.OtdrDataFormat;
 
 namespace IitOtdrLibrary
 {
@@ -37,19 +37,23 @@ namespace IitOtdrLibrary
             IsInitializedSuccessfully = true;
         }
 
-        public bool MeasureWithBase(string filename)
+        public bool MeasureWithBase(byte[] buffer)
         {
-            byte[] buffer = File.ReadAllBytes(filename);
+            // allocate memory inside c++ library
+            // put there base sor data
+            // return pointer to that data, than you can say c++ code to use this data
             var baseSorData = IitOtdr.SetBaseSorData(buffer);
 
-            if (IitOtdr.SetParamFromSor(ref baseSorData))
+            var result = false;
+            if (IitOtdr.SetMeasurementParametersFromSor(ref baseSorData))
             {
                 IitOtdr.ForceLmaxNs(IitOtdr.ConvertLmaxOwtToNs(buffer));
-                return Measure();
+                result = Measure();
             }
 
+            // free memory where was base sor data
             IitOtdr.FreeBaseSorDataMemory(baseSorData);
-            return true;
+            return result;
         }
 
         public bool DoManualMeasurement(bool shouldForceLmax)
@@ -109,13 +113,13 @@ namespace IitOtdrLibrary
             }
         }
 
-        public void GetLastSorData()
+        public OtdrDataKnownBlocks GetLastSorData()
         {
             int bufferLength = IitOtdr.GetSorDataSize(_sorData);
             if (bufferLength == -1)
             {
                 Console.WriteLine("_sorData is null");
-                return;
+                return null;
             }
             byte[] buffer = new byte[bufferLength];
 
@@ -123,9 +127,13 @@ namespace IitOtdrLibrary
             if (size == -1)
             {
                 Console.WriteLine("Error in GetLastSorData");
-                return;
+                return null;
             }
-            File.WriteAllBytes(@"c:\temp\123.sor", buffer);
+
+            var sorData = SorData.FromBytes(buffer);
+//            sorData.IitParameters.SetFlagFilter(false); ???
+
+            return sorData;
         }
     }
 }

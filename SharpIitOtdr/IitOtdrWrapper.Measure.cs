@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
-using Optixsoft.SorExaminer.OtdrDataFormat;
-using Optixsoft.SorExaminer.OtdrDataFormat.IO;
 
 namespace IitOtdrLibrary
 {
@@ -56,25 +53,16 @@ namespace IitOtdrLibrary
             return lmaxNs;
         }
 
-        public int ConvertLmaxOwtToNs(byte[] data)
+        public int ConvertLmaxOwtToNs(byte[] buffer)
         {
             const int owtsInTwoWayNs = 5;
 
-            var sorData = ToSorData(data);
+            var sorData = SorData.FromBytes(buffer);
             int lmaxOwt = sorData.IitParameters.DistnaceRangeUser;
             if (lmaxOwt == -1)
                 lmaxOwt = (int)sorData.FixedParameters.AcquisitionRange;
 
             return lmaxOwt / owtsInTwoWayNs;
-        }
-
-
-        public OtdrDataKnownBlocks ToSorData(byte[] data)
-        {
-            using (var stream = new MemoryStream(data))
-            {
-                return new OtdrDataKnownBlocks(new OtdrReader(stream).Data);
-            }
         }
 
         public bool PrepareMeasurement(bool isAver)

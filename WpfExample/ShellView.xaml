@@ -1,25 +1,29 @@
 <Window x:Class="WpfExample.ShellView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+        SizeToContent="Height" Width="350" WindowStartupLocation="CenterScreen">
 
     <StackPanel>
         <GroupBox Header="Initialization" Margin="5">
             <StackPanel>
                 <TextBox Margin="5" Text="{Binding IpAddress}"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" Margin="5" Text="Port 1500"/>
-                    <Button Name="InitOtdr" Content="Init OTDR" Width="150" Margin="5"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Width="100" Margin="5" Text="{Binding OtauPort}"/>
-                    <Button Name="InitOtau" Content="Init Otau" Margin="5" Width="150"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Width="100" Margin="5" Text="{Binding ActivePort}" IsEnabled="{Binding IsOtauInitialized}"/>
-                    <Button Name="SetActivePort" Content="Set active port" Margin="5" Width="150" IsEnabled="{Binding IsOtauInitialized}"/>
-                </StackPanel>
+                <DockPanel>
+                    <TextBlock Width="90" Margin="5" Text="Tcp port"/>
+                    <TextBlock Width="40" Margin="5" Text="1500"/>
+                    <Button Name="InitOtdr" Content="Init OTDR" Margin="5"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="90" Margin="5" Text="Tcp port"/>
+                    <TextBox Width="40" Margin="5" Text="{Binding OtauPort}"/>
+                    <Button Name="InitOtau" Content="Init Otau" Margin="5"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Width="90" Margin="5" Text="Optical port"/>
+                    <TextBox Width="40" Margin="5" Text="{Binding ActivePort}" IsEnabled="{Binding IsOtauInitialized}"/>
+                    <Button Name="SetActivePort" Content="Set active port" Margin="5" IsEnabled="{Binding IsOtauInitialized}"/>
+                </DockPanel>
                 <TextBlock Margin="5" Text="{Binding CharonInfo}" Background="AliceBlue"/>
+                <TextBlock Margin="5" Text="{Binding InitializationMessage}" Background="AliceBlue"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="MeasurementClient" Margin="5">
@@ -31,8 +35,16 @@
         </GroupBox>
         <GroupBox Header="As monitoring" Margin="5">
             <StackPanel>
+                <DockPanel>
+                    <Button Name="ChooseBaseFilename" Content="Choose base" Width="100" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+                    <TextBlock Name="BaseFileNameTextBox" Text="{Binding BaseFileName}" Margin="5" Background="AliceBlue"/>
+                </DockPanel>
                 <Button Name="StartMeasurementWithBase" Content="Start measurement with base" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
-                <TextBox Name="BaseFileNameTextBox" Text="{Binding BaseFileName}" Margin="5"/>
+                <DockPanel>
+                    <TextBlock Text="Current" Margin="5" />
+                    <TextBlock Name="CurrentFileNameTextBox" Text="{Binding CurrentFileName}" Margin="5" Background="AliceBlue"/>
+                </DockPanel>
+                <Button Name="CompareMeasurementWithBase" Content="Compare" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Margin="5">

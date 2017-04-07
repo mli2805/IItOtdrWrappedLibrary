@@ -81,7 +81,7 @@ namespace IitOtdrLibrary
                 Console.WriteLine("Set parameter error!");
         }
 
-        public bool SetParamFromSor(ref IntPtr baseSorData)
+        public bool SetMeasurementParametersFromSor(ref IntPtr baseSorData)
         {
             int cmd = 708; // SERVICE_CMD_SETPARAM_FROM_SOR
             int reserved = 0;

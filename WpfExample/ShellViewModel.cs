@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using IitOtdrLibrary;
 using DirectCharonLibrary;
+using Microsoft.Win32;
 
 namespace WpfExample
 {
@@ -13,7 +15,31 @@ namespace WpfExample
 
         public bool ShouldForceLmax { get; set; } = true;
 
-        public string BaseFileName { get; set; } = @"c:\temp\base.sor";
+        public string _baseFileName;
+        public string BaseFileName
+        {
+            get { return _baseFileName; }
+            set
+            {
+                if (Equals(value, _baseFileName)) return;
+                _baseFileName = value;
+                NotifyOfPropertyChange(() => BaseFileName);
+            }
+        }
+
+        public string CurrentFileName { get; set; } = @"c:\temp\123.sor";
+
+        public string _initializationMessage;
+        public string InitializationMessage
+        {
+            get { return _initializationMessage; }
+            set
+            {
+                if (Equals(value, _initializationMessage)) return;
+                _initializationMessage = value;
+                NotifyOfPropertyChange(() => InitializationMessage);
+            }
+        }
 
         public string _message;
         public string Message
@@ -68,7 +94,18 @@ namespace WpfExample
 
         public string IpAddress { get; set; }
         public int OtauPort { get; set; }
-        public int ActivePort { get; set; }
+
+        private int _activePort;
+        public int ActivePort
+        {
+            get { return _activePort; }
+            set
+            {
+                if (Equals(value, _activePort)) return;
+                _activePort = value;
+                NotifyOfPropertyChange(() => ActivePort);
+            }
+        }
 
 
         public ShellViewModel()
@@ -77,23 +114,25 @@ namespace WpfExample
             //            IpAddress = "172.16.4.10";
             //IpAddress = "192.168.88.101";
             OtauPort = 23;
+
+            BaseFileName = @"c:\temp\base.sor";
         }
 
         public async Task InitOtdr()
         {
-            Message = "Wait, please...";
+            InitializationMessage = "Wait, please...";
 
             OtdrManager = new OtdrManager();
             var initializationResult = OtdrManager.LoadDll();
             if (initializationResult != "")
             {
-                Message = initializationResult;
+                InitializationMessage = initializationResult;
                 return;
             }
 
             await RunInitializationProcess();
 
-            Message = IsOtdrInitialized ? "OTDR initialized successfully!" : "OTDR initialization failed!";
+            InitializationMessage = IsOtdrInitialized ? "OTDR initialized successfully!" : "OTDR initialization failed!";
         }
 
         private async Task RunInitializationProcess()
@@ -108,11 +147,12 @@ namespace WpfExample
 
         public async Task InitOtau()
         {
-            Message = "Wait, please...";
+            InitializationMessage = "Wait, please...";
             MainCharon = new Charon(new NetAddress() { IpAddress = IpAddress, TcpPort = OtauPort });
             await RunOtauInitialization();
+            ActivePort = MainCharon.GetExtendedActivePort();
 
-            Message = MainCharon.IsLastCommandSuccessful ? "OTAU initialized successfully!" : "OTAU initialization failed!";
+            InitializationMessage = MainCharon.IsLastCommandSuccessful ? "OTAU initialized successfully!" : "OTAU initialization failed!";
         }
 
         public async Task RunOtauInitialization()
@@ -131,7 +171,7 @@ namespace WpfExample
         public void SetActivePort()
         {
             var newActivePort = MainCharon.SetExtendedActivePort(ActivePort);
-            Message = newActivePort != -1 ? $"Otau toggled to port {newActivePort}" : "Failed to toggle otau!";
+            InitializationMessage = newActivePort != -1 ? $"Otau toggled to port {newActivePort}" : "Failed to toggle otau!";
         }
 
         public void LaunchOtdrParamView()
@@ -153,8 +193,18 @@ namespace WpfExample
                 IsMeasurementInProgress = false;
                 Message = "Measurement is finished.";
 
-                OtdrManager.GetLastSorData();
+                var sorData = OtdrManager.GetLastSorData();
+                sorData.Save(CurrentFileName);
             }
+        }
+
+        public void ChooseBaseFilename()
+        {
+            var fd = new OpenFileDialog();
+            fd.Filter = "Sor files (*.sor)|*.sor";
+            fd.InitialDirectory = @"c:\temp\";
+            if (fd.ShowDialog() == true)
+                BaseFileName = fd.FileName;
         }
 
         public async Task StartMeasurementWithBase()
@@ -164,13 +214,20 @@ namespace WpfExample
                 IsMeasurementInProgress = true;
                 Message = "Wait, please...";
 
-                await Task.Run(() => OtdrManager.MeasureWithBase(BaseFileName));
+                byte[] buffer = File.ReadAllBytes(BaseFileName);
+                await Task.Run(() => OtdrManager.MeasureWithBase(buffer));
 
                 IsMeasurementInProgress = false;
                 Message = "Measurement is finished.";
 
-                OtdrManager.GetLastSorData();
+                var sorData = OtdrManager.GetLastSorData();
+                sorData.Save(CurrentFileName);
             }
+        }
+
+        public void CompareMeasurementWithBase()
+        {
+            
         }
 
         public void InterruptMeasurement()
