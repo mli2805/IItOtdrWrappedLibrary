@@ -150,9 +150,11 @@ namespace WpfExample
             InitializationMessage = "Wait, please...";
             MainCharon = new Charon(new NetAddress() { IpAddress = IpAddress, TcpPort = OtauPort });
             await RunOtauInitialization();
-            ActivePort = MainCharon.GetExtendedActivePort();
+            InitializationMessage = MainCharon.IsLastCommandSuccessful ? "OTAU initialized successfully!" : MainCharon.LastErrorMessage;
 
-            InitializationMessage = MainCharon.IsLastCommandSuccessful ? "OTAU initialized successfully!" : "OTAU initialization failed!";
+            if (!MainCharon.IsLastCommandSuccessful)
+                return;
+            ActivePort = MainCharon.GetExtendedActivePort();
         }
 
         public async Task RunOtauInitialization()
@@ -171,7 +173,7 @@ namespace WpfExample
         public void SetActivePort()
         {
             var newActivePort = MainCharon.SetExtendedActivePort(ActivePort);
-            InitializationMessage = newActivePort != -1 ? $"Otau toggled to port {newActivePort}" : "Failed to toggle otau!";
+            InitializationMessage = newActivePort != -1 ? $"Otau toggled to port {newActivePort}" : MainCharon.LastErrorMessage;
         }
 
         public void LaunchOtdrParamView()

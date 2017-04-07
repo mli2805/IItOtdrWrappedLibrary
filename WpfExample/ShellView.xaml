@@ -23,7 +23,7 @@
                     <Button Name="SetActivePort" Content="Set active port" Margin="5" IsEnabled="{Binding IsOtauInitialized}"/>
                 </DockPanel>
                 <TextBlock Margin="5" Text="{Binding CharonInfo}" Background="AliceBlue"/>
-                <TextBlock Margin="5" Text="{Binding InitializationMessage}" Background="AliceBlue"/>
+                <TextBlock Margin="5" Text="{Binding InitializationMessage}" Background="AliceBlue" TextWrapping="Wrap" />
             </StackPanel>
         </GroupBox>
         <GroupBox Header="MeasurementClient" Margin="5">

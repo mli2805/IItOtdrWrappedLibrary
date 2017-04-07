@@ -50,6 +50,7 @@ namespace DirectCharonLibrary
                     childCharon.Parent = this;
                     if (!childCharon.Initialize())
                     {
+                        IsLastCommandSuccessful = false;
                         LastErrorMessage = $"Child charon {expendedPort.Value} initialization failed";
                         return false;
                     }
