@@ -39,11 +39,11 @@ namespace IitOtdrLibrary
 
         public int ConvertLmaxKmToNs()
         {
-            string lmaxString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveLmax);
+            string lmaxString = GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveLmax);
             int lmax;
             if (!int.TryParse(lmaxString, out lmax))
                 lmax = 200;
-            string riString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveRi);
+            string riString = GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveRi);
             int ri;
             if (!int.TryParse(riString, out ri))
                 ri = 147500;

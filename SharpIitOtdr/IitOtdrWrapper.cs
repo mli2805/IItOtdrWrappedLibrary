@@ -46,7 +46,7 @@ namespace IitOtdrLibrary
 
         public string GetLineOfVariantsForParam(int param)
         {
-            int cmd = 702; // SERVICE_CMD_GETPARAM
+            int cmd = (int)ServiceFunctionCommand.GetParam;
             int prm1 = param;
 
             IntPtr unmanagedPointer = IntPtr.Zero;
@@ -63,7 +63,7 @@ namespace IitOtdrLibrary
             if (value == null)
                 return null;
 
-            // если вариант только 1 он возвращается без первого слэша
+            // if there is only one variant it will be returned without leading slash
             if (value[0] != '/')
                 return new[] { value };
 
@@ -74,7 +74,7 @@ namespace IitOtdrLibrary
 
         public void SetParam(int param, int indexInLine)
         {
-            int cmd = 705; // SERVICE_CMD_SETPARAM
+            int cmd = (int)ServiceFunctionCommand.SetParam;
             int prm1 = param;
             IntPtr prm2 = new IntPtr(indexInLine);
             if (ServiceFunction(cmd, ref prm1, ref prm2) != 0)
@@ -83,7 +83,7 @@ namespace IitOtdrLibrary
 
         public bool SetMeasurementParametersFromSor(ref IntPtr baseSorData)
         {
-            int cmd = 708; // SERVICE_CMD_SETPARAM_FROM_SOR
+            int cmd = (int)ServiceFunctionCommand.SetParamFromSor;
             int reserved = 0;
 
             var result = ServiceFunction(cmd, ref reserved, ref baseSorData);
@@ -94,7 +94,7 @@ namespace IitOtdrLibrary
 
         public bool ForceLmaxNs(int lmaxNs)
         {
-            int cmd = 746; // SERVICE_CMD_PARAM_MEAS_LMAX_SET
+            int cmd = (int)ServiceFunctionCommand.ParamMeasLmaxSet;
             IntPtr reserved = new IntPtr();
             var result = ServiceFunction(cmd, ref lmaxNs, ref reserved);
             if (result != 0)

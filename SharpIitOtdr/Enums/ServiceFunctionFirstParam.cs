@@ -1,6 +1,6 @@
 ﻿namespace IitOtdrLibrary
 {
-    public enum ServiceCmdParam
+    public enum ServiceFunctionFirstParam
     {
         Unit = 1,
         Lmax = 2,
