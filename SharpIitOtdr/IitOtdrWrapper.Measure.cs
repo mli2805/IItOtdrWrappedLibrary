@@ -106,6 +106,5 @@ namespace IitOtdrLibrary
         {
             DestroySorPtr(sorData);
         }
-
     }
 }

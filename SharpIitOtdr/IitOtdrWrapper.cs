@@ -71,7 +71,6 @@ namespace IitOtdrLibrary
             return strs.Skip(1).ToArray();
         }
 
-
         public void SetParam(int param, int indexInLine)
         {
             int cmd = (int)ServiceFunctionCommand.SetParam;
@@ -100,8 +99,6 @@ namespace IitOtdrLibrary
             if (result != 0)
                 Console.WriteLine("Set parameter error!");
             return result == 0;
-
         }
-
     }
 }
