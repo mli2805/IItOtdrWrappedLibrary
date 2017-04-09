@@ -37,33 +37,33 @@ namespace ConsoleApp
         private static List<string> ReadCurrentParameters()
         {
             var content = new List<string>();
-            content.Add($"Unit = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.Unit)}");
-            content.Add($"ActiveUnit = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveUnit)}");
+            content.Add($"Unit = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.Unit)}");
+            content.Add($"ActiveUnit = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveUnit)}");
 
-            content.Add($"ActiveRi = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveRi)}");
+            content.Add($"ActiveRi = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveRi)}");
 
-            content.Add($"ActiveBc = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveBc)}");
+            content.Add($"ActiveBc = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveBc)}");
 
-            content.Add($"Lmax = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.Lmax)}");
-            content.Add($"ActiveLmax = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveLmax)}");
+            content.Add($"Lmax = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.Lmax)}");
+            content.Add($"ActiveLmax = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveLmax)}");
 
-            content.Add($"Res = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.Res)}");
-            content.Add($"ActiveRes = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveRes)}");
+            content.Add($"Res = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.Res)}");
+            content.Add($"ActiveRes = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveRes)}");
 
-            content.Add($"Pulse = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.Pulse)}");
-            content.Add($"ActivePulse = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActivePulse)}");
+            content.Add($"Pulse = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.Pulse)}");
+            content.Add($"ActivePulse = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActivePulse)}");
 
-            var isTime = _otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveIsTime);
+            var isTime = _otdrManager.IitOtdr.GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveIsTime);
             content.Add($"ActiveIsTime = {isTime}");
             if (1 == int.Parse(isTime))
             {
-                content.Add($"Time = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceCmdParam.Time)}");
-                content.Add($"ActiveTime = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveTime)}");
+                content.Add($"Time = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceFunctionFirstParam.Time)}");
+                content.Add($"ActiveTime = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceFunctionFirstParam.ActiveTime)}");
             }
             else
             {
-                content.Add($"Navr = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceCmdParam.Navr)}");
-                content.Add($"ActiveNavr = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceCmdParam.ActiveNavr)}");
+                content.Add($"Navr = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceFunctionFirstParam.Navr)}");
+                content.Add($"ActiveNavr = {_otdrManager.IitOtdr.GetLineOfVariantsForParam((int)ServiceFunctionFirstParam.ActiveNavr)}");
             }
 
             // and so on...

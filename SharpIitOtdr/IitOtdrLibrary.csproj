@@ -60,12 +60,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ConnectionTypes.cs" />
+    <Compile Include="Enums\ServiceFunctionCommand.cs" />
     <Compile Include="IitOtdrWrapper.cs" />
     <Compile Include="IitOtdrWrapper.Measure.cs" />
+    <Compile Include="Enums\MeasStepReturns.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="OtdrManager.cs" />
+    <Compile Include="OtdrManager.Measure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceCmdParam.cs" />
+    <Compile Include="Enums\ServiceFunctionFirstParam.cs" />
     <Compile Include="SorData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

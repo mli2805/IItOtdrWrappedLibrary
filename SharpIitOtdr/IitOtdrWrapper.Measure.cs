@@ -39,11 +39,11 @@ namespace IitOtdrLibrary
 
         public int ConvertLmaxKmToNs()
         {
-            string lmaxString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveLmax);
+            string lmaxString = GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveLmax);
             int lmax;
             if (!int.TryParse(lmaxString, out lmax))
                 lmax = 200;
-            string riString = GetLineOfVariantsForParam((int) ServiceCmdParam.ActiveRi);
+            string riString = GetLineOfVariantsForParam((int) ServiceFunctionFirstParam.ActiveRi);
             int ri;
             if (!int.TryParse(riString, out ri))
                 ri = 147500;
@@ -75,10 +75,10 @@ namespace IitOtdrLibrary
 
         public bool DoMeasurementStep(ref IntPtr sorData)
         {
-            var error = MeasStep(ref sorData);
-            if (error != 0)
-                Console.WriteLine($"Error {error} in MeasStep");
-            return error == 0;
+            var result = MeasStep(ref sorData);
+            if (result != 0)
+                Console.WriteLine($"MeasStep returned {(MeasStepReturns)result}");
+            return result == 0;
         }
 
         public int StopMeasurement(bool isImmediateStop)
@@ -106,6 +106,5 @@ namespace IitOtdrLibrary
         {
             DestroySorPtr(sorData);
         }
-
     }
 }
