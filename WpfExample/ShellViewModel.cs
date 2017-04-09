@@ -275,6 +275,7 @@ namespace WpfExample
             lock (_cycleLockOb)
             {
                 _isMonitoringCycleCanceled = true;
+                InterruptMeasurement();
             }
         }
 
