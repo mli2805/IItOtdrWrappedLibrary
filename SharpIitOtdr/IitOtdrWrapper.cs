@@ -94,7 +94,7 @@ namespace IitOtdrLibrary
         public bool ForceLmaxNs(int lmaxNs)
         {
             int cmd = (int)ServiceFunctionCommand.ParamMeasLmaxSet;
-            IntPtr reserved = new IntPtr();
+            IntPtr reserved = IntPtr.Zero;
             var result = ServiceFunction(cmd, ref lmaxNs, ref reserved);
             if (result != 0)
                 Console.WriteLine("Set parameter error!");
