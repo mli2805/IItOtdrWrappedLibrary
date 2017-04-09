@@ -232,6 +232,53 @@ namespace WpfExample
             
         }
 
+        private bool _isMonitoringCycleCanceled;
+        private object _cycleLockOb = new object();
+        public async Task StartCycle()
+        {
+            lock (_cycleLockOb)
+            {
+                _isMonitoringCycleCanceled = false;
+            }
+
+            int c = 0;
+            while (true)
+            {
+                lock (_cycleLockOb)
+                {
+                    if (_isMonitoringCycleCanceled)
+                    {
+                        OtdrManager.InterruptMeasurement();
+                        break;
+                    }
+                }
+                using (new WaitCursor())
+                {
+                    IsMeasurementInProgress = true;
+                    Message = $"Monitoring cycle {c}. Wait, please...";
+
+                    byte[] buffer = File.ReadAllBytes(BaseFileName);
+                    await Task.Run(() => OtdrManager.MeasureWithBase(buffer));
+
+                    IsMeasurementInProgress = false;
+                    Message = $"{c}th measurement is finished.";
+
+                    var sorData = OtdrManager.GetLastSorData();
+                    sorData.Save(CurrentFileName);
+                }
+                c++;
+            }
+
+        }
+        public void StopCycle()
+        {
+            lock (_cycleLockOb)
+            {
+                _isMonitoringCycleCanceled = true;
+            }
+        }
+
+
         public void InterruptMeasurement()
         {
             OtdrManager.InterruptMeasurement();
