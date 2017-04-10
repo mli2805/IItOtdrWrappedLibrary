@@ -10,7 +10,7 @@ namespace IitOtdrLibrary
             // allocate memory inside c++ library
             // put there base sor data
             // return pointer to that data, than you can say c++ code to use this data
-            var baseSorData = IitOtdr.SetBaseSorData(buffer);
+            var baseSorData = IitOtdr.SetSorData(buffer);
 
             var result = false;
             if (IitOtdr.SetMeasurementParametersFromSor(ref baseSorData))
@@ -20,7 +20,7 @@ namespace IitOtdrLibrary
             }
 
             // free memory where was base sor data
-            IitOtdr.FreeBaseSorDataMemory(baseSorData);
+            IitOtdr.FreeSorDataMemory(baseSorData);
             return result;
         }
 
@@ -36,6 +36,10 @@ namespace IitOtdrLibrary
         private bool _isMeasurementCanceled;
         private IntPtr _sorData = IntPtr.Zero;
 
+        /// <summary>
+        /// after Measure() use GetLastSorData() to obtain measurement result
+        /// </summary>
+        /// <returns></returns>
         private bool Measure()
         {
             lock (_lockObj)
@@ -81,7 +85,8 @@ namespace IitOtdrLibrary
             }
         }
 
-        public OtdrDataKnownBlocks GetLastSorData()
+
+        public byte[] GetLastSorDataBuffer()
         {
             int bufferLength = IitOtdr.GetSorDataSize(_sorData);
             if (bufferLength == -1)
@@ -97,11 +102,25 @@ namespace IitOtdrLibrary
                 Console.WriteLine("Error in GetLastSorData");
                 return null;
             }
+            return buffer;
+        }
+
+        public OtdrDataKnownBlocks GetLastSorData()
+        {
+            var buffer = GetLastSorDataBuffer();
+            if (buffer == null)
+                return null;
 
             var sorData = SorData.FromBytes(buffer);
-            //            sorData.IitParameters.SetFlagFilter(false); ???
-
+            sorData.IitParameters.Parameters = (IitBlockParameters)SetBitFlagInParameters((int)sorData.IitParameters.Parameters, IitBlockParameters.Filter, false);
             return sorData;
+        }
+
+        private int SetBitFlagInParameters(int parameters, IitBlockParameters parameter, bool flag)
+        {
+            return flag
+                ? parameters | (int)parameter
+                : parameters & (65535 ^ (int)parameter);
         }
     }
 }

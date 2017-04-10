@@ -61,11 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ConnectionTypes.cs" />
+    <Compile Include="Enums\MoniLevelType.cs" />
     <Compile Include="Enums\ServiceFunctionCommand.cs" />
     <Compile Include="IitOtdrWrapper.cs" />
     <Compile Include="IitOtdrWrapper.Measure.cs" />
     <Compile Include="Enums\MeasStepReturns.cs" />
+    <Compile Include="MoniResult.cs" />
     <Compile Include="Native.cs" />
+    <Compile Include="OtdrManager.Compare.cs" />
     <Compile Include="OtdrManager.cs" />
     <Compile Include="OtdrManager.Measure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

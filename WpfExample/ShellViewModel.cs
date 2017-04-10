@@ -229,7 +229,11 @@ namespace WpfExample
 
         public void CompareMeasurementWithBase()
         {
-            
+            var bufferBase = File.ReadAllBytes(@"c:\temp\base.sor");
+            var bufferMeas = File.ReadAllBytes(@"c:\temp\123.sor");
+
+
+            OtdrManager.CompareMeasureWithBase(bufferBase, bufferMeas, true);
         }
 
         private bool _isMonitoringCycleCanceled;

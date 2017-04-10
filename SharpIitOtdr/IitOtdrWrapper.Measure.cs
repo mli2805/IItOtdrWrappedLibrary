@@ -3,6 +3,21 @@ using System.Runtime.InteropServices;
 
 namespace IitOtdrLibrary
 {
+    /// <summary>
+    /// For usual measurement with parameters from file, c++ code will allocate memory and put there results.
+    /// We should only pass empty pointer which will be filled out with address where we can get measurement result.
+    /// 
+    /// In all other cases when we have some data which should be transfered to c++ code to perform any actions upon it:
+    /// - base reflectogram;
+    /// - measurement to analysis;
+    /// such data should be serialized into byte[] and by CreateSorPtr passed to c++ code:
+    /// memory will be allocated, data copied and pointer will be returned - so we can use
+    /// this pointer for asking c++ code to perform some actions upon our data,
+    /// then again by this pointer we can get processed data back, calling GetSorDataSize and GetSorData,
+    /// and must free allocated memory calling FreeSorPtr
+    /// 
+    /// </summary>
+
     public partial class IitOtdrWrapper
     {
         // EXTERN_C __declspec(dllexport) int MeasPrepare(int mMode);
@@ -97,12 +112,12 @@ namespace IitOtdrLibrary
             return GetSorData(sorData, buffer, bufferLength);
         }
 
-        public IntPtr SetBaseSorData(byte[] buffer)
+        public IntPtr SetSorData(byte[] buffer)
         {
             return CreateSorPtr(buffer, buffer.Length);
         }
 
-        public void FreeBaseSorDataMemory(IntPtr sorData)
+        public void FreeSorDataMemory(IntPtr sorData)
         {
             DestroySorPtr(sorData);
         }

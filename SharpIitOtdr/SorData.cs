@@ -14,7 +14,6 @@ namespace IitOtdrLibrary
             }
         }
 
-
         public static byte[] ToBytes(OtdrDataKnownBlocks sorData)
         {
             using (var stream = new MemoryStream())

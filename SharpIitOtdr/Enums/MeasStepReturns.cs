@@ -8,4 +8,16 @@ namespace IitOtdrLibrary
         ReturnNoactlevel = 10003,
         ReturnFiberbreak = 10004,
     }
+
+    public enum ComparisonReturns
+    {
+        Ok                     = 0,
+        NoBase                 = 71,
+        DoingAutoMonitor       = 81,
+        NoService              = 82,
+        ReturnNolink           = 10002,
+        Noactlevel             = 10003,
+        ReturnFiberbreak       = 10004,
+
+    }
 }

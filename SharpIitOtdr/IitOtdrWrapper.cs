@@ -76,8 +76,9 @@ namespace IitOtdrLibrary
             int cmd = (int)ServiceFunctionCommand.SetParam;
             int prm1 = param;
             IntPtr prm2 = new IntPtr(indexInLine);
-            if (ServiceFunction(cmd, ref prm1, ref prm2) != 0)
-                Console.WriteLine("Set parameter error!");
+            var result = ServiceFunction(cmd, ref prm1, ref prm2);
+            if (result != 0)
+                Console.WriteLine($"Set parameter error={result}!");
         }
 
         public bool SetMeasurementParametersFromSor(ref IntPtr baseSorData)
@@ -87,8 +88,18 @@ namespace IitOtdrLibrary
 
             var result = ServiceFunction(cmd, ref reserved, ref baseSorData);
             if (result != 0)
-                Console.WriteLine("Set parameter error!");
+                Console.WriteLine($"Set parameters from sor error={result}!");
             return result == 0;
+        }
+
+        public ComparisonReturns CompareActiveLevel(bool includeBase, IntPtr measSorData)
+        {
+            int cmd = (int) ServiceFunctionCommand.MonitorEvents;
+            int prm1 = includeBase ? 1 : 0;
+
+            var result = (ComparisonReturns)ServiceFunction(cmd, ref prm1, ref measSorData);
+            Console.WriteLine($"Level comparison result = {result}!");
+            return result;
         }
 
         public bool ForceLmaxNs(int lmaxNs)
@@ -96,9 +107,10 @@ namespace IitOtdrLibrary
             int cmd = (int)ServiceFunctionCommand.ParamMeasLmaxSet;
             IntPtr reserved = IntPtr.Zero;
             var result = ServiceFunction(cmd, ref lmaxNs, ref reserved);
-            if (result != 0)
-                Console.WriteLine("Set parameter error!");
-            return result == 0;
+            if (result != 1)
+                Console.WriteLine($"Force Lmax in ns error={result}!");
+            return result == 1;
         }
+
     }
 }
