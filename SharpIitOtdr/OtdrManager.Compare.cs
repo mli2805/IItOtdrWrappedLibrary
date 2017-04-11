@@ -55,13 +55,15 @@ namespace IitOtdrLibrary
             };
             return result;
         }
+
         public MoniResult CompareMeasureWithBase(byte[] baseBuffer, byte[] measBuffer, bool includeBase)
         {
             MoniResult moniResult = new MoniResult();
 
             var baseSorData = SorData.FromBytes(baseBuffer);
             var measSorData = SorData.FromBytes(measBuffer);
-            measSorData.EmbeddedData = bufferToEmbeddedDataBlock(baseBuffer);
+            if (includeBase)
+                measSorData.EmbeddedData = bufferToEmbeddedDataBlock(baseBuffer);
 
             var levelCount = baseSorData.RftsParameters.LevelsCount;
             Console.WriteLine($"Comparison begin. Level count = {levelCount}");
@@ -71,10 +73,11 @@ namespace IitOtdrLibrary
                 if (rftsLevel.IsEnabled)
                 {
                     baseSorData.RftsParameters.ActiveLevelIndex = i;
-                    CompareOneLevel(baseSorData, ref measSorData, includeBase, GetMoniLevelType(rftsLevel.LevelName), moniResult);
+                    CompareOneLevel(baseSorData, ref measSorData, false, GetMoniLevelType(rftsLevel.LevelName), moniResult);
                 }
             }
 
+            measSorData.Save(@"c:\temp\MeasWithBase.sor");
             return moniResult;
         }
 
