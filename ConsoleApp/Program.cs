@@ -11,7 +11,7 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            _otdrManager = new OtdrManager();
+            _otdrManager = new OtdrManager(@"..\IitOtdr\");
             if (_otdrManager.LoadDll() == "")
             {
                 string otdrAddress;
@@ -19,9 +19,9 @@ namespace ConsoleApp
                     otdrAddress = args[0];
                 else
                 {
-                    otdrAddress = "172.16.4.10";
+//                    otdrAddress = "172.16.4.10";
 //                    otdrAddress = "192.168.88.101";
-//                    otdrAddress = "192.168.96.52";
+                    otdrAddress = "192.168.96.52";
                 }
                 _otdrManager.InitializeLibrary(otdrAddress);
                 if (_otdrManager.IsInitializedSuccessfully)

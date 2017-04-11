@@ -19,9 +19,9 @@ namespace IitOtdrLibrary
         public static extern int ServiceFunction(int cmd, ref int prm1, ref IntPtr prm2);
 
 
-        public bool InitDll()
+        public bool InitDll(string folder)
         {
-            string path = "";
+            string path = folder;
             IntPtr logFile = IntPtr.Zero;
             IntPtr lenUnit = IntPtr.Zero;
             try

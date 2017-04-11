@@ -122,7 +122,7 @@ namespace WpfExample
         {
             InitializationMessage = "Wait, please...";
 
-            OtdrManager = new OtdrManager();
+            OtdrManager = new OtdrManager(@"..\IitOtdr\");
             var initializationResult = OtdrManager.LoadDll();
             if (initializationResult != "")
             {
