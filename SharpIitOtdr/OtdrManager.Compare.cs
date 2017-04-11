@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Optixsoft.SorExaminer.OtdrDataFormat;
 using Optixsoft.SorExaminer.OtdrDataFormat.Structures;
 
@@ -35,7 +34,7 @@ namespace IitOtdrLibrary
                     moniResult.IsNoFiber = true;
                     break;
                 default:
-                    Console.WriteLine($"something goes wrong, code {returnCode}");
+                    _rtuLogger.AppendLine($"something goes wrong, code {returnCode}");
                     break;
             }
         }
@@ -66,7 +65,7 @@ namespace IitOtdrLibrary
                 measSorData.EmbeddedData = bufferToEmbeddedDataBlock(baseBuffer);
 
             var levelCount = baseSorData.RftsParameters.LevelsCount;
-            Console.WriteLine($"Comparison begin. Level count = {levelCount}");
+            _rtuLogger.AppendLine($"Comparison begin. Level count = {levelCount}");
             for (int i = 0; i < levelCount; i++)
             {
                 var rftsLevel = baseSorData.RftsParameters.Levels[i];
@@ -92,7 +91,7 @@ namespace IitOtdrLibrary
             var measIntPtr = IitOtdr.SetSorData(SorData.ToBytes(measSorData));
             var returnCode = IitOtdr.CompareActiveLevel(includeBase, measIntPtr);
 
-            Console.WriteLine($"Level {type} comparison result = {returnCode}!");
+            _rtuLogger.AppendLine($"Level {type} comparison result = {returnCode}!");
 
             var size = IitOtdr.GetSorDataSize(measIntPtr);
             byte[] buffer = new byte[size];

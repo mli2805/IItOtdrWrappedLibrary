@@ -84,7 +84,7 @@ namespace IitOtdrLibrary
         {
             var error = MeasPrepare(isAver ? 601 : 600);
             if (error != 0)
-                Console.WriteLine($"Error {error} in MeasPrepare");
+                _rtuLogger.AppendLine($"Error {error} in MeasPrepare");
             return error == 0;
         }
 
@@ -92,7 +92,7 @@ namespace IitOtdrLibrary
         {
             var result = MeasStep(ref sorData);
             if (result != 0)
-                Console.WriteLine($"MeasStep returned {(MeasStepReturns)result}");
+                _rtuLogger.AppendLine($"MeasStep returned {(MeasStepReturns)result}");
             return result == 0;
         }
 

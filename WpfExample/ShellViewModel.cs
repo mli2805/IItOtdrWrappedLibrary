@@ -91,8 +91,7 @@ namespace WpfExample
                 NotifyOfPropertyChange(() => IsMeasurementInProgress);
             }
         }
-
-
+        
         public string IpAddress { get; set; }
         public int OtauPort { get; set; }
 
@@ -152,7 +151,7 @@ namespace WpfExample
         public async Task InitOtau()
         {
             InitializationMessage = "Wait, please...";
-            MainCharon = new Charon(new NetAddress() { IpAddress = IpAddress, TcpPort = OtauPort });
+            MainCharon = new Charon(new NetAddress() { IpAddress = IpAddress, TcpPort = OtauPort }, _rtuLogger);
             await RunOtauInitialization();
             InitializationMessage = MainCharon.IsLastCommandSuccessful ? "OTAU initialized successfully!" : MainCharon.LastErrorMessage;
 
@@ -237,7 +236,7 @@ namespace WpfExample
             var bufferMeas = File.ReadAllBytes(@"c:\temp\123.sor");
 
             var moniResult = OtdrManager.CompareMeasureWithBase(bufferBase, bufferMeas, true);
-            Console.WriteLine($"Comparison end. IsFiberBreak = {moniResult.IsFiberBreak}, IsNoFiber = {moniResult.IsNoFiber}");
+            _rtuLogger.AppendLine($"Comparison end. IsFiberBreak = {moniResult.IsFiberBreak}, IsNoFiber = {moniResult.IsNoFiber}");
         }
 
         private bool _isMonitoringCycleCanceled;

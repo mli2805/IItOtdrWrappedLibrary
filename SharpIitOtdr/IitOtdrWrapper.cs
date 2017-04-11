@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Iit.Fibertest.Utils;
 
 namespace IitOtdrLibrary
 {
     public partial class IitOtdrWrapper
     {
+        private readonly Logger _rtuLogger;
         //EXTERN_C __declspec(dllexport) void DllInit(char* pathDLL, void* logFile, TLenUnit* lenUnit);
         [DllImport("iit_otdr.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "DllInit")]
         public static extern void DllInit(string path, IntPtr logFile, IntPtr lenUnit);
@@ -19,6 +21,11 @@ namespace IitOtdrLibrary
         public static extern int ServiceFunction(int cmd, ref int prm1, ref IntPtr prm2);
 
 
+        public IitOtdrWrapper(Logger rtuLogger)
+        {
+            _rtuLogger = rtuLogger;
+        }
+
         public bool InitDll(string folder)
         {
             string path = folder;
@@ -30,7 +37,7 @@ namespace IitOtdrLibrary
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _rtuLogger.AppendLine(e.Message);
                 return false;
             }
             return true;
@@ -40,7 +47,7 @@ namespace IitOtdrLibrary
         {
             var initOtdr = InitOTDR((int)type, ip, port);
             if (initOtdr != 0)
-                Console.WriteLine($"Initialization error: {initOtdr}");
+                _rtuLogger.AppendLine($"Initialization error: {initOtdr}");
             return initOtdr == 0;
         }
 
@@ -78,7 +85,7 @@ namespace IitOtdrLibrary
             IntPtr prm2 = new IntPtr(indexInLine);
             var result = ServiceFunction(cmd, ref prm1, ref prm2);
             if (result != 0)
-                Console.WriteLine($"Set parameter error={result}!");
+                _rtuLogger.AppendLine($"Set parameter error={result}!");
         }
 
         public bool SetBaseForComparison(IntPtr baseSorData)
@@ -88,7 +95,7 @@ namespace IitOtdrLibrary
 
             var result = ServiceFunction(cmd, ref reserved, ref baseSorData);
             if (result != 0)
-                Console.WriteLine($"Set base for comparison error={result}!");
+                _rtuLogger.AppendLine($"Set base for comparison error={result}!");
             return result == 0;
         }
 
@@ -99,7 +106,7 @@ namespace IitOtdrLibrary
 
             var result = ServiceFunction(cmd, ref reserved, ref baseSorData);
             if (result != 0)
-                Console.WriteLine($"Set parameters from sor error={result}!");
+                _rtuLogger.AppendLine($"Set parameters from sor error={result}!");
             return result == 0;
         }
 
@@ -118,7 +125,7 @@ namespace IitOtdrLibrary
             IntPtr reserved = IntPtr.Zero;
             var result = ServiceFunction(cmd, ref lmaxNs, ref reserved);
             if (result != 1)
-                Console.WriteLine($"Force Lmax in ns error={result}!");
+                _rtuLogger.AppendLine($"Force Lmax in ns error={result}!");
             return result == 1;
         }
 

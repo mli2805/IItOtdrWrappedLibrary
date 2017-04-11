@@ -1,11 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Iit.Fibertest.Utils;
 
 namespace DirectCharonLibrary
 {
     public partial class Charon
     {
+        private readonly Logger _rtuLogger;
         public NetAddress NetAddress { get; set; }
         public string Serial { get; set; }
         public int OwnPortCount { get; set; }
@@ -20,8 +21,9 @@ namespace DirectCharonLibrary
         public string LastAnswer { get; set; }
         public bool IsLastCommandSuccessful { get; set; }
 
-        public Charon(NetAddress netAddress)
+        public Charon(NetAddress netAddress, Logger rtuLogger)
         {
+            _rtuLogger = rtuLogger;
             NetAddress = netAddress;
         }
 
@@ -46,7 +48,7 @@ namespace DirectCharonLibrary
             if (expendedPorts != null)
                 foreach (var expendedPort in expendedPorts)
                 {
-                    var childCharon = new Charon(expendedPort.Value);
+                    var childCharon = new Charon(expendedPort.Value, _rtuLogger);
                     childCharon.Parent = this;
                     if (!childCharon.Initialize())
                     {
@@ -123,7 +125,7 @@ namespace DirectCharonLibrary
             var extPorts = GetExtentedPorts();
             if (extPorts.ContainsKey(toOpticalPort))
             {
-                Console.WriteLine("This is extended port already. Denied.");
+                _rtuLogger.AppendLine("This is extended port already. Denied.");
                 return true;
             }
             extPorts.Add(toOpticalPort, additionalOtauAddress);

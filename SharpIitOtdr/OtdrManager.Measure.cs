@@ -70,7 +70,7 @@ namespace IitOtdrLibrary
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _rtuLogger.AppendLine(e.Message);
                 return false;
             }
 
@@ -91,7 +91,7 @@ namespace IitOtdrLibrary
             int bufferLength = IitOtdr.GetSorDataSize(_sorData);
             if (bufferLength == -1)
             {
-                Console.WriteLine("_sorData is null");
+                _rtuLogger.AppendLine("_sorData is null");
                 return null;
             }
             byte[] buffer = new byte[bufferLength];
@@ -99,7 +99,7 @@ namespace IitOtdrLibrary
             var size = IitOtdr.GetSordata(_sorData, buffer, bufferLength);
             if (size == -1)
             {
-                Console.WriteLine("Error in GetLastSorData");
+                _rtuLogger.AppendLine("Error in GetLastSorData");
                 return null;
             }
             return buffer;
