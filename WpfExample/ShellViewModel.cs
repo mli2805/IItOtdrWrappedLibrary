@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using IitOtdrLibrary;
 using DirectCharonLibrary;
+using Iit.Fibertest.Utils;
 using Microsoft.Win32;
 
 namespace WpfExample
@@ -107,9 +108,12 @@ namespace WpfExample
             }
         }
 
+        private readonly Logger _rtuLogger;
 
         public ShellViewModel()
         {
+            _rtuLogger = new Logger("rtu.log");
+
             IpAddress = "192.168.96.52";
             //            IpAddress = "172.16.4.10";
             //IpAddress = "192.168.88.101";
@@ -122,7 +126,7 @@ namespace WpfExample
         {
             InitializationMessage = "Wait, please...";
 
-            OtdrManager = new OtdrManager(@"..\IitOtdr\");
+            OtdrManager = new OtdrManager(@"..\IitOtdr\", _rtuLogger);
             var initializationResult = OtdrManager.LoadDll();
             if (initializationResult != "")
             {

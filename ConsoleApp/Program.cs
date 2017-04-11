@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using IitOtdrLibrary;
+using Iit.Fibertest.Utils;
 
 namespace ConsoleApp
 {
@@ -11,7 +12,7 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            _otdrManager = new OtdrManager(@"..\IitOtdr\");
+            _otdrManager = new OtdrManager(@"..\IitOtdr\", new Logger("rtu.log"));
             if (_otdrManager.LoadDll() == "")
             {
                 string otdrAddress;
