@@ -7,12 +7,12 @@ namespace IitOtdrLibrary
     {
         public bool MeasureWithBase(byte[] buffer)
         {
+            var result = false;
+
             // allocate memory inside c++ library
             // put there base sor data
             // return pointer to that data, than you can say c++ code to use this data
             var baseSorData = IitOtdr.SetSorData(buffer);
-
-            var result = false;
             if (IitOtdr.SetMeasurementParametersFromSor(ref baseSorData))
             {
                 IitOtdr.ForceLmaxNs(IitOtdr.ConvertLmaxOwtToNs(buffer));
@@ -42,13 +42,17 @@ namespace IitOtdrLibrary
         /// <returns></returns>
         private bool Measure()
         {
+            _rtuLogger.AppendLine("Measurement begin.");
             lock (_lockObj)
             {
                 _isMeasurementCanceled = false;
             }
 
             if (!IitOtdr.PrepareMeasurement(true))
+            {
+                _rtuLogger.AppendLine("Prepare measurement error!");
                 return false;
+            }
 
             try
             {
@@ -60,6 +64,7 @@ namespace IitOtdrLibrary
                         if (_isMeasurementCanceled)
                         {
                             IitOtdr.StopMeasurement(true);
+                            _rtuLogger.AppendLine("Measurement interrupted.");
                             break;
                         }
                     }
@@ -74,6 +79,7 @@ namespace IitOtdrLibrary
                 return false;
             }
 
+            _rtuLogger.AppendLine("Measurement end.");
             return true;
         }
 
@@ -85,8 +91,7 @@ namespace IitOtdrLibrary
             }
         }
 
-
-        public byte[] GetLastSorDataBuffer()
+        private byte[] GetLastSorDataBuffer()
         {
             int bufferLength = IitOtdr.GetSorDataSize(_sorData);
             if (bufferLength == -1)
@@ -113,6 +118,7 @@ namespace IitOtdrLibrary
 
             var sorData = SorData.FromBytes(buffer);
             sorData.IitParameters.Parameters = (IitBlockParameters)SetBitFlagInParameters((int)sorData.IitParameters.Parameters, IitBlockParameters.Filter, false);
+            _rtuLogger.AppendLine("Measurement result received.");
             return sorData;
         }
 
