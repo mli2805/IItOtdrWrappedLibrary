@@ -32,12 +32,10 @@ namespace IitOtdrLibrary
                 int errorCode = Marshal.GetLastWin32Error();
                 message = $"Failed to load library {dllPath} (code: {errorCode})";
                 _rtuLogger.AppendLine(message);
-                _rtuLogger.AppendLine(message);
                 return message;
             }
 
             message = $"Library {dllPath} loaded successfully";
-            _rtuLogger.AppendLine(message);
             _rtuLogger.AppendLine(message);
             return "";
         }
@@ -47,7 +45,6 @@ namespace IitOtdrLibrary
 
             var message = "Initializing iit_otdr (loading sub libraries?) ...";
             _rtuLogger.AppendLine(message);
-            _rtuLogger.AppendLine(message);
             IitOtdr.InitDll(_iitotdrFolder);
 
             _rtuLogger.AppendLine($"Connecting to OTDR {ipAddress}...");
@@ -55,6 +52,7 @@ namespace IitOtdrLibrary
                 return;
 
             IsInitializedSuccessfully = true;
+            _rtuLogger.AppendLine("OTDR initialized successfully!");
         }
 
     }

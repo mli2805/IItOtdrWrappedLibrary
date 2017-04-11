@@ -42,7 +42,14 @@ namespace Iit.Fibertest.Utils
         }
         public void AppendLine(string message)
         {
-            _logFile.WriteLine(DateTime.Now + "  " + message);
+            message = message.Replace("\0", string.Empty);
+            message = message.Trim();
+            message = message.Replace("\r\n", " <NL> ");
+            _logFile.WriteLine(DateTime.Now + "  " + message.Trim());
+        }
+        public void Append(string message)
+        {
+            _logFile.Write(message);
         }
     }
 }

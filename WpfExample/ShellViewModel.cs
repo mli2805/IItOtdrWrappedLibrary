@@ -164,9 +164,11 @@ namespace WpfExample
         {
             using (new WaitCursor())
             {
+                _rtuLogger.AppendLine("Otau initialization started");
                 await Task.Run(() => MainCharon.Initialize());
                 if (MainCharon.IsLastCommandSuccessful)
                 {
+                    _rtuLogger.AppendLine($"Otau initialized successfully");
                     IsOtauInitialized = true;
                     NotifyOfPropertyChange(() => CharonInfo);
                 }

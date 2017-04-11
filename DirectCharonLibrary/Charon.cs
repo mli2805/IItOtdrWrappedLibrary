@@ -34,17 +34,28 @@ namespace DirectCharonLibrary
 
             Serial = GetSerial();
             if (!IsLastCommandSuccessful)
+            {
+                _rtuLogger.AppendLine($"Get Serial error {LastErrorMessage}");
                 return false;
+            }
             Serial = Serial.Substring(0, Serial.Length - 2); // "\r\n"
+            _rtuLogger.AppendLine($"Serial {Serial}");
 
             OwnPortCount = GetOwnPortCount();
             FullPortCount = OwnPortCount;
             if (!IsLastCommandSuccessful)
+            {
+                _rtuLogger.AppendLine($"Get own port count error {LastErrorMessage}");
                 return false;
+            }
+            _rtuLogger.AppendLine($"Own port count  {OwnPortCount}");
 
             var expendedPorts = GetExtentedPorts();
             if (!IsLastCommandSuccessful)
+            {
+                _rtuLogger.AppendLine($"Get extended ports error {LastErrorMessage}");
                 return false;
+            }
             if (expendedPorts != null)
                 foreach (var expendedPort in expendedPorts)
                 {
@@ -54,12 +65,14 @@ namespace DirectCharonLibrary
                     {
                         IsLastCommandSuccessful = false;
                         LastErrorMessage = $"Child charon {expendedPort.Value} initialization failed";
+                        _rtuLogger.AppendLine(LastErrorMessage);
                         return false;
                     }
                     Children.Add(expendedPort.Key, childCharon);
                     FullPortCount += childCharon.FullPortCount;
                 }
 
+            _rtuLogger.AppendLine($"Full port count  {FullPortCount}");
             return true;
         }
 

@@ -17,6 +17,7 @@ namespace ConsoleAppOtau
 //          const int tcpPort = 11834;
 
             const int tcpPort = 23;
+            _rtuLogger.AppendLine("Otau initialization started");
             var ch = new Charon(new NetAddress() { IpAddress = serverIp, TcpPort = tcpPort }, _rtuLogger);
             if (ch.Initialize())
                 _rtuLogger.AppendLine($"charon {ch.Serial} has {ch.OwnPortCount} ports");

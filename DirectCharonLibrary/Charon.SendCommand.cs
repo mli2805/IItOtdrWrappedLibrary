@@ -20,7 +20,7 @@ namespace DirectCharonLibrary
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(cmd);
 
                 //---send the text---
-                _rtuLogger.AppendLine("Sending : \n" + cmd);
+                _rtuLogger.AppendLine("Sending : " + cmd);
                 nwStream.Write(bytesToSend, 0, bytesToSend.Length);
 
                 // for bulk command could be needed
@@ -30,7 +30,7 @@ namespace DirectCharonLibrary
                 byte[] bytesToRead = new byte[client.ReceiveBufferSize];
                 int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
                 client.Close();
-                _rtuLogger.AppendLine("Received : \n" + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+                _rtuLogger.AppendLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
                 LastAnswer = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 IsLastCommandSuccessful = true;
             }
@@ -55,13 +55,13 @@ namespace DirectCharonLibrary
 
                 //---send the command---
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(cmd);
-                _rtuLogger.AppendLine("Sending : \n" + cmd);
+                _rtuLogger.AppendLine("Sending : " + cmd);
                 nwStream.Write(bytesToSend, 0, bytesToSend.Length);
 
                 //---read back the answer---
                 byte[] bytesToRead = new byte[client.ReceiveBufferSize];
                 int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                _rtuLogger.AppendLine("Received : \n" + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+                _rtuLogger.AppendLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
 
                 //---send the content---
                 byte[] contentBytes = new byte[480];
@@ -81,7 +81,7 @@ namespace DirectCharonLibrary
                 //---read back the answer---
                 bytesToRead = new byte[client.ReceiveBufferSize];
                 bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                _rtuLogger.AppendLine("Received : \n" + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
+                _rtuLogger.AppendLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
 
                 client.Close();
                 LastAnswer = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
