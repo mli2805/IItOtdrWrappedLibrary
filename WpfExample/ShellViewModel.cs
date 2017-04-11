@@ -232,8 +232,8 @@ namespace WpfExample
             var bufferBase = File.ReadAllBytes(@"c:\temp\base.sor");
             var bufferMeas = File.ReadAllBytes(@"c:\temp\123.sor");
 
-
-            OtdrManager.CompareMeasureWithBase(bufferBase, bufferMeas, true);
+            var moniResult = OtdrManager.CompareMeasureWithBase(bufferBase, bufferMeas, true);
+            Console.WriteLine($"Comparison end. IsFiberBreak = {moniResult.IsFiberBreak}, IsNoFiber = {moniResult.IsNoFiber}");
         }
 
         private bool _isMonitoringCycleCanceled;
@@ -269,6 +269,7 @@ namespace WpfExample
 
                     var sorData = OtdrManager.GetLastSorData();
                     sorData.Save(CurrentFileName);
+                    CompareMeasurementWithBase();
                 }
                 c++;
             }

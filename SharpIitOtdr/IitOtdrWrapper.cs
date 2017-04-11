@@ -81,6 +81,17 @@ namespace IitOtdrLibrary
                 Console.WriteLine($"Set parameter error={result}!");
         }
 
+        public bool SetBaseForComparison(IntPtr baseSorData)
+        {
+            int cmd = (int) ServiceFunctionCommand.Setbase;
+            int reserved = 0;
+
+            var result = ServiceFunction(cmd, ref reserved, ref baseSorData);
+            if (result != 0)
+                Console.WriteLine($"Set base for comparison error={result}!");
+            return result == 0;
+        }
+
         public bool SetMeasurementParametersFromSor(ref IntPtr baseSorData)
         {
             int cmd = (int)ServiceFunctionCommand.SetParamFromSor;
@@ -98,7 +109,6 @@ namespace IitOtdrLibrary
             int prm1 = includeBase ? 1 : 0;
 
             var result = (ComparisonReturns)ServiceFunction(cmd, ref prm1, ref measSorData);
-            Console.WriteLine($"Level comparison result = {result}!");
             return result;
         }
 
