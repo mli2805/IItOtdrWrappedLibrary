@@ -39,7 +39,16 @@ namespace IitOtdrLibrary
 
         public bool InitOtdr(ConnectionTypes type, string ip, int port)
         {
-            var initOtdr = InitOTDR((int)type, ip, port);
+            int initOtdr;
+            try
+            {
+                initOtdr = InitOTDR((int)type, ip, port);
+            }
+            catch (Exception e)
+            {
+                _rtuLogger.AppendLine(e.Message);
+                return false;
+            }
             if (initOtdr != 0)
                 _rtuLogger.AppendLine($"Initialization error: {initOtdr}");
             return initOtdr == 0;
