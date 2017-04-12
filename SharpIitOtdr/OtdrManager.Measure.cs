@@ -91,7 +91,7 @@ namespace IitOtdrLibrary
             }
         }
 
-        private byte[] GetLastSorDataBuffer()
+        public byte[] GetLastSorDataBuffer()
         {
             int bufferLength = IitOtdr.GetSorDataSize(_sorData);
             if (bufferLength == -1)
@@ -107,19 +107,22 @@ namespace IitOtdrLibrary
                 _rtuLogger.AppendLine("Error in GetLastSorData");
                 return null;
             }
+            _rtuLogger.AppendLine("Measurement result received.");
             return buffer;
         }
 
-        public OtdrDataKnownBlocks GetLastSorData()
+        public OtdrDataKnownBlocks ApplyAutoAnalysis(byte[] measBytes)
         {
-            var buffer = GetLastSorDataBuffer();
-            if (buffer == null)
+            var measIntPtr = IitOtdr.SetSorData(measBytes);
+            if (!IitOtdr.MakeAutoAnalysis(ref measIntPtr))
+            {
+                _rtuLogger.AppendLine("ApplyAutoAnalysis error.");
                 return null;
-
-            var sorData = SorData.FromBytes(buffer);
-            sorData.IitParameters.Parameters = (IitBlockParameters)SetBitFlagInParameters((int)sorData.IitParameters.Parameters, IitBlockParameters.Filter, false);
-            _rtuLogger.AppendLine("Measurement result received.");
-            return sorData;
+            }
+            var size = IitOtdr.GetSorDataSize(measIntPtr);
+            byte[] resultBytes = new byte[size];
+            IitOtdr.GetSordata(measIntPtr, resultBytes, size);
+            return SorData.FromBytes(resultBytes);
         }
 
         private int SetBitFlagInParameters(int parameters, IitBlockParameters parameter, bool flag)

@@ -63,9 +63,12 @@
     <Compile Include="Enums\ConnectionTypes.cs" />
     <Compile Include="Enums\MoniLevelType.cs" />
     <Compile Include="Enums\ServiceFunctionCommand.cs" />
-    <Compile Include="IitOtdrWrapper.cs" />
+    <Compile Include="IitOtdrWrapper.DataExchange.cs" />
+    <Compile Include="IitOtdrWrapper.Initialization.cs" />
     <Compile Include="IitOtdrWrapper.Measure.cs" />
     <Compile Include="Enums\MeasStepReturns.cs" />
+    <Compile Include="IitOtdrWrapper.MeasureParameters.cs" />
+    <Compile Include="IitOtdrWrapper.ServiceFunction.cs" />
     <Compile Include="MoniResult.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="OtdrManager.Compare.cs" />

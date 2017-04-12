@@ -28,7 +28,17 @@ namespace WpfExample
             }
         }
 
-        public string CurrentFileName { get; set; } = @"c:\temp\123.sor";
+        public string _measFileName;
+        public string MeasFileName
+        {
+            get { return _measFileName; }
+            set
+            {
+                if (Equals(value, _measFileName)) return;
+                _measFileName = value;
+                NotifyOfPropertyChange(() => MeasFileName);
+            }
+        }
 
         public string _initializationMessage;
         public string InitializationMessage
@@ -119,6 +129,7 @@ namespace WpfExample
             OtauPort = 23;
 
             BaseFileName = @"c:\temp\base.sor";
+            MeasFileName = @"c:\temp\123.sor";
         }
 
         public async Task InitOtdr()
@@ -200,8 +211,13 @@ namespace WpfExample
                 IsMeasurementInProgress = false;
                 Message = "Measurement is finished.";
 
-                var sorData = OtdrManager.GetLastSorData();
-                sorData.Save(CurrentFileName);
+                var lastSorDataBuffer = OtdrManager.GetLastSorDataBuffer();
+                if (lastSorDataBuffer == null)
+                    return;
+
+                File.WriteAllBytes(@"c:\temp\123buff.sor", lastSorDataBuffer);
+                var sorData = OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer);
+                sorData.Save(MeasFileName);
             }
         }
 
@@ -212,6 +228,15 @@ namespace WpfExample
             fd.InitialDirectory = @"c:\temp\";
             if (fd.ShowDialog() == true)
                 BaseFileName = fd.FileName;
+        }
+
+        public void ChooseMeasFilename()
+        {
+            var fd = new SaveFileDialog();
+            fd.Filter = "Sor files (*.sor)|*.sor";
+            fd.InitialDirectory = @"c:\temp\";
+            if (fd.ShowDialog() == true)
+                MeasFileName = fd.FileName;
         }
 
         public async Task StartMeasurementWithBase()
@@ -227,15 +252,19 @@ namespace WpfExample
                 IsMeasurementInProgress = false;
                 Message = "Measurement is finished.";
 
-                var sorData = OtdrManager.GetLastSorData();
-                sorData.Save(CurrentFileName);
+                var lastSorDataBuffer = OtdrManager.GetLastSorDataBuffer();
+                if (lastSorDataBuffer == null)
+                    return;
+                File.WriteAllBytes(@"c:\temp\123buff.sor", lastSorDataBuffer);
+                var sorData = OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer);
+                sorData.Save(MeasFileName);
             }
         }
 
         public void CompareMeasurementWithBase()
         {
-            var bufferBase = File.ReadAllBytes(@"c:\temp\base.sor");
-            var bufferMeas = File.ReadAllBytes(@"c:\temp\123.sor");
+            var bufferBase = File.ReadAllBytes(BaseFileName);
+            var bufferMeas = File.ReadAllBytes(MeasFileName);
 
             var moniResult = OtdrManager.CompareMeasureWithBase(bufferBase, bufferMeas, true);
             _rtuLogger.AppendLine($"Comparison end. IsFiberBreak = {moniResult.IsFiberBreak}, IsNoFiber = {moniResult.IsNoFiber}");
@@ -272,8 +301,8 @@ namespace WpfExample
                     IsMeasurementInProgress = false;
                     Message = $"{c}th measurement is finished.";
 
-                    var sorData = OtdrManager.GetLastSorData();
-                    sorData.Save(CurrentFileName);
+                    var sorData = OtdrManager.ApplyAutoAnalysis(OtdrManager.GetLastSorDataBuffer());
+                    sorData.Save(MeasFileName);
                     CompareMeasurementWithBase();
                 }
                 c++;
