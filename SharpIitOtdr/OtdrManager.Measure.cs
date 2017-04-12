@@ -122,7 +122,9 @@ namespace IitOtdrLibrary
             var size = IitOtdr.GetSorDataSize(measIntPtr);
             byte[] resultBytes = new byte[size];
             IitOtdr.GetSordata(measIntPtr, resultBytes, size);
-            return SorData.FromBytes(resultBytes);
+            var sorData = SorData.FromBytes(resultBytes);
+            sorData.IitParameters.Parameters = (IitBlockParameters)SetBitFlagInParameters((int)sorData.IitParameters.Parameters, IitBlockParameters.Filter, false);
+            return sorData;
         }
 
         private int SetBitFlagInParameters(int parameters, IitBlockParameters parameter, bool flag)
