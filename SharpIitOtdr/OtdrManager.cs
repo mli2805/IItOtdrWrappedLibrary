@@ -43,7 +43,7 @@ namespace IitOtdrLibrary
         {
             IitOtdr = new IitOtdrWrapper(_rtuLogger);
 
-            var message = "Initializing iit_otdr (loading sub libraries?) ...";
+            var message = "Initializing iit_otdr (log, ini, temp and other stuff) ...";
             _rtuLogger.AppendLine(message);
             IitOtdr.InitDll(_iitotdrFolder);
 

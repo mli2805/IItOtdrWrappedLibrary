@@ -25,7 +25,10 @@ namespace Iit.Fibertest.Utils
 
                 var logFileName = Path.GetFullPath(Path.Combine(logFolder, filename));
                 if (!File.Exists(logFileName))
-                    using (FileStream fs = File.Create(logFileName)) { } 
+                    using (FileStream fs = File.Create(logFileName))
+                    {   // BOM
+                        fs.WriteByte(239); fs.WriteByte(187); fs.WriteByte(191);
+                    } 
                 return logFileName;
             }
             catch (COMException e)
