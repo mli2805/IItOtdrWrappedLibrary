@@ -24,8 +24,9 @@ namespace ConsoleApp
 //                    otdrAddress = "192.168.88.101";
                     otdrAddress = "192.168.96.52";
                 }
-                _otdrManager.InitializeLibrary(otdrAddress);
-                if (_otdrManager.IsInitializedSuccessfully)
+                if (_otdrManager.InitializeLibrary())
+                    _otdrManager.ConnectOtdr(otdrAddress);
+                if (_otdrManager.IsOtdrConnected)
                 {
                     var content = ReadCurrentParameters();
                     File.WriteAllLines(@"c:\temp\paramOtdr.txt", content.ToArray());

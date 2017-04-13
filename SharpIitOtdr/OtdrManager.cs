@@ -11,7 +11,8 @@ namespace IitOtdrLibrary
         private readonly Logger _rtuLogger;
 
         public IitOtdrWrapper IitOtdr { get; set; }
-        public bool IsInitializedSuccessfully;
+        public bool IsLibraryInitialized;
+        public bool IsOtdrConnected;
 
         public OtdrManager(string iitotdrFolder, Logger rtuLogger)
         {
@@ -39,20 +40,33 @@ namespace IitOtdrLibrary
             _rtuLogger.AppendLine(message);
             return "";
         }
-        public void InitializeLibrary(string ipAddress)
+        public bool InitializeLibrary()
         {
             IitOtdr = new IitOtdrWrapper(_rtuLogger);
-
             var message = "Initializing iit_otdr (log, ini, temp and other stuff) ...";
             _rtuLogger.AppendLine(message);
-            IitOtdr.InitDll(_iitotdrFolder);
+            IsLibraryInitialized = IitOtdr.InitDll(_iitotdrFolder);
+            _rtuLogger.AppendLine(IsLibraryInitialized ? "Library initialized successfully!" : "Library initialization failed!");
+            return IsLibraryInitialized;
+        }
 
+        public bool ConnectOtdr(string ipAddress)
+        {
             _rtuLogger.AppendLine($"Connecting to OTDR {ipAddress}...");
-            if (!IitOtdr.InitOtdr(ConnectionTypes.Tcp, ipAddress, 1500))
+
+            IsOtdrConnected = IitOtdr.InitOtdr(ConnectionTypes.Tcp, ipAddress, 1500);
+            _rtuLogger.AppendLine(IsOtdrConnected ? "OTDR connected successfully!" : "OTDR connection failed!");
+            return IsOtdrConnected;
+        }
+
+        public void DisconnectOtdr(string ipAddress)
+        {
+            _rtuLogger.AppendLine($"Disconnecting to OTDR {ipAddress}...");
+            if (!IitOtdr.InitOtdr(ConnectionTypes.FreePort, ipAddress, 1500))
                 return;
 
-            IsInitializedSuccessfully = true;
-            _rtuLogger.AppendLine("OTDR initialized successfully!");
+            IsOtdrConnected = false;
+            _rtuLogger.AppendLine("OTDR disconnected successfully!");
         }
 
     }

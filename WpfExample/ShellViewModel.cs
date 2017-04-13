@@ -66,15 +66,27 @@ namespace WpfExample
 
         public string CharonInfo => $"charon {MainCharon?.Serial} has {MainCharon?.OwnPortCount}/{MainCharon?.FullPortCount} ports";
 
-        private bool _isOtdrInitialized;
-        public bool IsOtdrInitialized
+        private bool _isLibraryInitialized;
+        public bool IsLibraryInitialized
         {
-            get { return _isOtdrInitialized; }
+            get { return _isLibraryInitialized; }
             set
             {
-                if (Equals(value, _isOtdrInitialized)) return;
-                _isOtdrInitialized = value;
-                NotifyOfPropertyChange(() => IsOtdrInitialized);
+                if (Equals(value, _isLibraryInitialized)) return;
+                _isLibraryInitialized = value;
+                NotifyOfPropertyChange(() => IsLibraryInitialized);
+            }
+        }
+
+        private bool _isOtdrConnected;
+        public bool IsOtdrConnected
+        {
+            get { return _isOtdrConnected; }
+            set
+            {
+                if (Equals(value, _isOtdrConnected)) return;
+                _isOtdrConnected = value;
+                NotifyOfPropertyChange(() => IsOtdrConnected);
             }
         }
 
@@ -130,32 +142,30 @@ namespace WpfExample
 
             BaseFileName = @"c:\temp\base.sor";
             MeasFileName = @"c:\temp\123.sor";
-        }
 
-        public async Task InitOtdr()
-        {
-            InitializationMessage = "Wait, please...";
 
             OtdrManager = new OtdrManager(@"..\IitOtdr\", _rtuLogger);
             var initializationResult = OtdrManager.LoadDll();
             if (initializationResult != "")
-            {
                 InitializationMessage = initializationResult;
-                return;
-            }
-
-            await RunInitializationProcess();
-
-            InitializationMessage = IsOtdrInitialized ? "OTDR initialized successfully!" : "OTDR initialization failed!";
+            IsLibraryInitialized = OtdrManager.InitializeLibrary();
         }
 
-        private async Task RunInitializationProcess()
+        public async Task ConnectOtdr()
+        {
+            InitializationMessage = "Wait, please...";
+
+            await ConnectionProcess();
+
+            InitializationMessage = IsOtdrConnected ? "OTDR connected successfully!" : "OTDR connection failed!";
+        }
+
+        private async Task ConnectionProcess()
         {
             using (new WaitCursor())
             {
-                await Task.Run(() => OtdrManager.InitializeLibrary(IpAddress));
-                if (OtdrManager.IsInitializedSuccessfully)
-                    IsOtdrInitialized = true;
+                await Task.Run(() => OtdrManager.ConnectOtdr(IpAddress));
+                IsOtdrConnected = OtdrManager.IsOtdrConnected;
             }
         }
 
@@ -214,8 +224,6 @@ namespace WpfExample
                 var lastSorDataBuffer = OtdrManager.GetLastSorDataBuffer();
                 if (lastSorDataBuffer == null)
                     return;
-
-                File.WriteAllBytes(@"c:\temp\123buff.sor", lastSorDataBuffer);
                 var sorData = OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer);
                 sorData.Save(MeasFileName);
             }
@@ -255,7 +263,6 @@ namespace WpfExample
                 var lastSorDataBuffer = OtdrManager.GetLastSorDataBuffer();
                 if (lastSorDataBuffer == null)
                     return;
-                File.WriteAllBytes(@"c:\temp\123buff.sor", lastSorDataBuffer);
                 var sorData = OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer);
                 sorData.Save(MeasFileName);
             }

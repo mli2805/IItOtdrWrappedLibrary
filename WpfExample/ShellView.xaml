@@ -10,7 +10,7 @@
                 <DockPanel>
                     <TextBlock Width="90" Margin="5" Text="Tcp port"/>
                     <TextBlock Width="40" Margin="5" Text="1500"/>
-                    <Button Name="InitOtdr" Content="Init OTDR" Margin="5"/>
+                    <Button Name="ConnectOtdr" Content="Connect OTDR" Margin="5" IsEnabled="{Binding IsLibraryInitialized}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Width="90" Margin="5" Text="Tcp port"/>
