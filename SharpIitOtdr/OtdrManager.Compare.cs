@@ -61,6 +61,8 @@ namespace IitOtdrLibrary
 
             var baseSorData = SorData.FromBytes(baseBuffer);
             var measSorData = SorData.FromBytes(measBuffer);
+            measSorData.IitParameters.Parameters = baseSorData.IitParameters.Parameters;
+
             if (includeBase)
                 measSorData.EmbeddedData = bufferToEmbeddedDataBlock(baseBuffer);
 

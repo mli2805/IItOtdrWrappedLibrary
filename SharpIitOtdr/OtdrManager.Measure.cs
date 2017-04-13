@@ -111,7 +111,7 @@ namespace IitOtdrLibrary
             return buffer;
         }
 
-        public OtdrDataKnownBlocks ApplyAutoAnalysis(byte[] measBytes)
+        public byte[] ApplyAutoAnalysis(byte[] measBytes)
         {
             var measIntPtr = IitOtdr.SetSorData(measBytes);
             if (!IitOtdr.MakeAutoAnalysis(ref measIntPtr))
@@ -122,9 +122,20 @@ namespace IitOtdrLibrary
             var size = IitOtdr.GetSorDataSize(measIntPtr);
             byte[] resultBytes = new byte[size];
             IitOtdr.GetSordata(measIntPtr, resultBytes, size);
-            var sorData = SorData.FromBytes(resultBytes);
-            sorData.IitParameters.Parameters = (IitBlockParameters)SetBitFlagInParameters((int)sorData.IitParameters.Parameters, IitBlockParameters.Filter, false);
+            return resultBytes;
+        }
+
+        public OtdrDataKnownBlocks ApplyFilter(byte[] sorBytes, bool isFilterOn)
+        {
+            var sorData = SorData.FromBytes(sorBytes);
+            sorData.IitParameters.Parameters = (IitBlockParameters)SetBitFlagInParameters((int)sorData.IitParameters.Parameters, IitBlockParameters.Filter, isFilterOn);
             return sorData;
+        }
+
+        public bool IsFilterOnInBase(byte[] sorBytes)
+        {
+            var sorData = SorData.FromBytes(sorBytes);
+            return (sorData.IitParameters.Parameters & IitBlockParameters.Filter) != 0;
         }
 
         private int SetBitFlagInParameters(int parameters, IitBlockParameters parameter, bool flag)

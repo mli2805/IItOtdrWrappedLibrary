@@ -224,7 +224,7 @@ namespace WpfExample
                 var lastSorDataBuffer = OtdrManager.GetLastSorDataBuffer();
                 if (lastSorDataBuffer == null)
                     return;
-                var sorData = OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer);
+                var sorData = OtdrManager.ApplyFilter(OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer), false);
                 sorData.Save(MeasFileName);
             }
         }
@@ -263,7 +263,7 @@ namespace WpfExample
                 var lastSorDataBuffer = OtdrManager.GetLastSorDataBuffer();
                 if (lastSorDataBuffer == null)
                     return;
-                var sorData = OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer);
+                var sorData = OtdrManager.ApplyFilter(OtdrManager.ApplyAutoAnalysis(lastSorDataBuffer), OtdrManager.IsFilterOnInBase(buffer));
                 sorData.Save(MeasFileName);
             }
         }
@@ -303,12 +303,13 @@ namespace WpfExample
                     Message = $"Monitoring cycle {c}. Wait, please...";
 
                     byte[] buffer = File.ReadAllBytes(BaseFileName);
+                    var isFilterOn = OtdrManager.IsFilterOnInBase(buffer);
                     await Task.Run(() => OtdrManager.MeasureWithBase(buffer));
 
                     IsMeasurementInProgress = false;
                     Message = $"{c}th measurement is finished.";
 
-                    var sorData = OtdrManager.ApplyAutoAnalysis(OtdrManager.GetLastSorDataBuffer());
+                    var sorData = OtdrManager.ApplyFilter(OtdrManager.ApplyAutoAnalysis(OtdrManager.GetLastSorDataBuffer()), OtdrManager.IsFilterOnInBase(buffer));
                     sorData.Save(MeasFileName);
                     CompareMeasurementWithBase();
                 }
