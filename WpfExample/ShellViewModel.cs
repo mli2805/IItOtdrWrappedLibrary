@@ -268,6 +268,7 @@ namespace WpfExample
             }
         }
 
+        // button
         public void CompareMeasurementWithBase()
         {
             var bufferBase = File.ReadAllBytes(BaseFileName);
@@ -276,6 +277,7 @@ namespace WpfExample
             var moniResult = OtdrManager.CompareMeasureWithBase(bufferBase, bufferMeas, true);
             _rtuLogger.AppendLine($"Comparison end. IsFiberBreak = {moniResult.IsFiberBreak}, IsNoFiber = {moniResult.IsNoFiber}");
         }
+
 
         private bool _isMonitoringCycleCanceled;
         private object _cycleLockOb = new object();
@@ -287,6 +289,9 @@ namespace WpfExample
             }
 
             int c = 0;
+            byte[] baseBytes = File.ReadAllBytes(BaseFileName);
+            var isFilterOn = OtdrManager.IsFilterOnInBase(baseBytes);
+
             while (true)
             {
                 lock (_cycleLockOb)
@@ -297,21 +302,20 @@ namespace WpfExample
                         break;
                     }
                 }
+
                 using (new WaitCursor())
                 {
                     IsMeasurementInProgress = true;
                     Message = $"Monitoring cycle {c}. Wait, please...";
+                    _rtuLogger.AppendLine($"Monitoring cycle {c}.");
 
-                    byte[] buffer = File.ReadAllBytes(BaseFileName);
-                    var isFilterOn = OtdrManager.IsFilterOnInBase(buffer);
-                    await Task.Run(() => OtdrManager.MeasureWithBase(buffer));
+                    await Task.Run(() => OtdrManager.MeasureWithBase(baseBytes));
 
                     IsMeasurementInProgress = false;
                     Message = $"{c}th measurement is finished.";
 
-                    var sorData = OtdrManager.ApplyFilter(OtdrManager.ApplyAutoAnalysis(OtdrManager.GetLastSorDataBuffer()), OtdrManager.IsFilterOnInBase(buffer));
-                    sorData.Save(MeasFileName);
-                    CompareMeasurementWithBase();
+                    OtdrManager.CompareMeasureWithBase(baseBytes,
+                        OtdrManager.ApplyAutoAnalysis(OtdrManager.GetLastSorDataBuffer()), true); // is ApplyAutoAnalysis necessary ?
                 }
                 c++;
             }

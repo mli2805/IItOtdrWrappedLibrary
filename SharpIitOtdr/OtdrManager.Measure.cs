@@ -122,6 +122,8 @@ namespace IitOtdrLibrary
             var size = IitOtdr.GetSorDataSize(measIntPtr);
             byte[] resultBytes = new byte[size];
             IitOtdr.GetSordata(measIntPtr, resultBytes, size);
+
+            IitOtdr.FreeSorDataMemory(measIntPtr);
             return resultBytes;
         }
 

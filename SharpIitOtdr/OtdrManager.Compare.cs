@@ -39,7 +39,7 @@ namespace IitOtdrLibrary
             }
         }
 
-        private EmbeddedDataBlock bufferToEmbeddedDataBlock(byte[] buffer)
+        private EmbeddedDataBlock BufferToEmbeddedDataBlock(byte[] buffer)
         {
             var embededData = new EmbeddedData
             {
@@ -64,7 +64,7 @@ namespace IitOtdrLibrary
             measSorData.IitParameters.Parameters = baseSorData.IitParameters.Parameters;
 
             if (includeBase)
-                measSorData.EmbeddedData = bufferToEmbeddedDataBlock(baseBuffer);
+                measSorData.EmbeddedData = BufferToEmbeddedDataBlock(baseBuffer);
 
             var levelCount = baseSorData.RftsParameters.LevelsCount;
             _rtuLogger.AppendLine($"Comparison begin. Level count = {levelCount}");
@@ -74,7 +74,7 @@ namespace IitOtdrLibrary
                 if (rftsLevel.IsEnabled)
                 {
                     baseSorData.RftsParameters.ActiveLevelIndex = i;
-                    CompareOneLevel(baseSorData, ref measSorData, false, GetMoniLevelType(rftsLevel.LevelName), moniResult);
+                    CompareOneLevel(baseSorData, ref measSorData, GetMoniLevelType(rftsLevel.LevelName), moniResult);
                 }
             }
 
@@ -82,7 +82,7 @@ namespace IitOtdrLibrary
             return moniResult;
         }
 
-        private void CompareOneLevel(OtdrDataKnownBlocks baseSorData, ref OtdrDataKnownBlocks measSorData,  bool includeBase, MoniLevelType type, MoniResult moniResult)
+        private void CompareOneLevel(OtdrDataKnownBlocks baseSorData, ref OtdrDataKnownBlocks measSorData,  MoniLevelType type, MoniResult moniResult)
         {
             var moniLevel = new MoniLevel {Type = type};
 
@@ -90,8 +90,9 @@ namespace IitOtdrLibrary
             var baseIntPtr = IitOtdr.SetSorData(SorData.ToBytes(baseSorData));
             IitOtdr.SetBaseForComparison(baseIntPtr);
 
+            // allocate memory
             var measIntPtr = IitOtdr.SetSorData(SorData.ToBytes(measSorData));
-            var returnCode = IitOtdr.CompareActiveLevel(includeBase, measIntPtr);
+            var returnCode = IitOtdr.CompareActiveLevel(measIntPtr);
 
             _rtuLogger.AppendLine($"Level {type} comparison result = {returnCode}!");
 

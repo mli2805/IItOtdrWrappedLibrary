@@ -28,9 +28,9 @@
         </GroupBox>
         <GroupBox Header="MeasurementClient" Margin="5">
             <StackPanel>
-                <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
-                <CheckBox IsChecked="{Binding ShouldForceLmax, Mode=TwoWay}" Content="Force Lmax" Margin="5,8,5,5" IsEnabled="{Binding IsOtdrInitialized}"/>
-                <Button Name="StartMeasurement" Content="Start measurement with parameters from ini files" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+                <Button Name="LaunchOtdrParamView" Content="Param" Margin="5" IsEnabled="{Binding IsOtdrConnected}"/>
+                <CheckBox IsChecked="{Binding ShouldForceLmax, Mode=TwoWay}" Content="Force Lmax" Margin="5,8,5,5" IsEnabled="{Binding IsOtdrConnected}"/>
+                <Button Name="StartMeasurement" Content="Start measurement with parameters from ini files" Margin="5" IsEnabled="{Binding IsOtdrConnected}"/>
                 <DockPanel>
                     <Button Name="ChooseMeasFilename" Content="Meas will be saved as" Width="130" Margin="5"/>
                     <TextBlock Name="CurrentFileNameTextBox" Text="{Binding MeasFileName}" Margin="5" Background="AliceBlue"/>
@@ -43,11 +43,11 @@
                     <Button Name="ChooseBaseFilename" Content="Choose base file" Width="130" Margin="5" />
                     <TextBlock Name="BaseFileNameTextBox" Text="{Binding BaseFileName}" Margin="5" Background="AliceBlue"/>
                 </DockPanel>
-                <Button Name="StartMeasurementWithBase" Content="Start measurement with parameters from base" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
-                <Button Name="CompareMeasurementWithBase" Content="Compare" Margin="5" IsEnabled="{Binding IsOtdrInitialized}"/>
+                <Button Name="StartMeasurementWithBase" Content="Start measurement with parameters from base" Margin="5" IsEnabled="{Binding IsOtdrConnected}"/>
+                <Button Name="CompareMeasurementWithBase" Content="Compare" Margin="5" IsEnabled="{Binding IsOtdrConnected}"/>
                 <DockPanel>
-                    <Button Name="StopCycle" DockPanel.Dock="Right" Content="Stop" Margin="5" Width="100" IsEnabled="{Binding IsOtdrInitialized}"/>
-                    <Button Name="StartCycle" DockPanel.Dock="Right" Content="Start" Margin="5" Width="100" IsEnabled="{Binding IsOtdrInitialized}"/>
+                    <Button Name="StopCycle" DockPanel.Dock="Right" Content="Stop" Margin="5" Width="100" IsEnabled="{Binding IsOtdrConnected}"/>
+                    <Button Name="StartCycle" DockPanel.Dock="Right" Content="Start" Margin="5" Width="100" IsEnabled="{Binding IsOtdrConnected}"/>
                     <TextBlock Text="Loop" Margin="5" HorizontalAlignment="Right"/>
                 </DockPanel>
             </StackPanel>

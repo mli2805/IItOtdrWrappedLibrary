@@ -18,6 +18,5 @@ namespace IitOtdrLibrary
         ReturnNolink           = 10002,
         Noactlevel             = 10003,
         ReturnFiberbreak       = 10004,
-
     }
 }

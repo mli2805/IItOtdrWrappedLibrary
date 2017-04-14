@@ -21,12 +21,12 @@ namespace IitOtdrLibrary
             return result == 0;
         }
 
-        public ComparisonReturns CompareActiveLevel(bool includeBase, IntPtr measSorData)
+        public ComparisonReturns CompareActiveLevel(IntPtr measSorData)
         {
             int cmd = (int)ServiceFunctionCommand.MonitorEvents;
-            int prm1 = includeBase ? 1 : 0;
+            int includeBase = 0;
 
-            var result = (ComparisonReturns)ServiceFunction(cmd, ref prm1, ref measSorData);
+            var result = (ComparisonReturns)ServiceFunction(cmd, ref includeBase, ref measSorData);
             return result;
         }
 
