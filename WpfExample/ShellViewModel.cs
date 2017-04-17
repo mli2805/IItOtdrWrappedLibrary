@@ -314,7 +314,7 @@ namespace WpfExample
                     IsMeasurementInProgress = false;
                     Message = $"{c}th measurement is finished.";
 
-                    OtdrManager.CompareMeasureWithBase(baseBytes,
+                    var moniResult = OtdrManager.CompareMeasureWithBase(baseBytes,
                         OtdrManager.ApplyAutoAnalysis(OtdrManager.GetLastSorDataBuffer()), true); // is ApplyAutoAnalysis necessary ?
                 }
                 c++;

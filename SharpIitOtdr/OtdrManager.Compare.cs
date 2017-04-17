@@ -1,5 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using Optixsoft.SharedCommons.SorSerialization;
 using Optixsoft.SorExaminer.OtdrDataFormat;
+using Optixsoft.SorExaminer.OtdrDataFormat.IO;
 using Optixsoft.SorExaminer.OtdrDataFormat.Structures;
 
 namespace IitOtdrLibrary
@@ -39,35 +44,40 @@ namespace IitOtdrLibrary
             }
         }
 
-        private EmbeddedDataBlock BufferToEmbeddedDataBlock(byte[] buffer)
+        private static EmbeddedData BaseBufferToEmbeddedData(byte[] buffer)
         {
-            var embededData = new EmbeddedData
+            return new EmbeddedData
             {
                 Description = "SOR",
                 DataSize = buffer.Length,
                 Data = buffer.ToArray()
             };
-
-            var result = new EmbeddedDataBlock
-            {
-                EmbeddedDataBlocks = new[] {embededData}
-            };
-            return result;
         }
 
         public MoniResult CompareMeasureWithBase(byte[] baseBuffer, byte[] measBuffer, bool includeBase)
         {
+            //
+            var bytes = File.ReadAllBytes(@"c:\temp\MeasWithBase1_5.sor");
+            var sorData = SorData.FromBytes(bytes);
+
+//            var bytes1 = File.ReadAllBytes(@"c:\temp\MeasWithBase.sor");
+//            var sorData1 = SorData.FromBytes(bytes1);
+            //
+
+
             MoniResult moniResult = new MoniResult();
 
             var baseSorData = SorData.FromBytes(baseBuffer);
             var measSorData = SorData.FromBytes(measBuffer);
             measSorData.IitParameters.Parameters = baseSorData.IitParameters.Parameters;
 
-            if (includeBase)
-                measSorData.EmbeddedData = BufferToEmbeddedDataBlock(baseBuffer);
-
             var levelCount = baseSorData.RftsParameters.LevelsCount;
             _rtuLogger.AppendLine($"Comparison begin. Level count = {levelCount}");
+
+            var embeddedData = new List<EmbeddedData>();
+            if (includeBase)
+                embeddedData.Add(BaseBufferToEmbeddedData(baseBuffer));
+
             for (int i = 0; i < levelCount; i++)
             {
                 var rftsLevel = baseSorData.RftsParameters.Levels[i];
@@ -75,11 +85,39 @@ namespace IitOtdrLibrary
                 {
                     baseSorData.RftsParameters.ActiveLevelIndex = i;
                     CompareOneLevel(baseSorData, ref measSorData, GetMoniLevelType(rftsLevel.LevelName), moniResult);
+//                    byte[] rftsEventsBytes = Save1(measSorData);
+//                    embeddedData.Add(
+//                        new EmbeddedData()
+//                        {
+//                            Description = "RFTSEVENTS",
+//                            BlockId = "",
+//                            Comment = "",
+//                            DataSize = rftsEventsBytes.Length,
+//                            Data = rftsEventsBytes
+//                        }
+//                    );
                 }
             }
 
+            measSorData.EmbeddedData.EmbeddedDataBlocks = embeddedData.ToArray();
+            measSorData.EmbeddedData.EmbeddedBlocksCount = (ushort)embeddedData.Count;
             measSorData.Save(@"c:\temp\MeasWithBase.sor");
             return moniResult;
+        }
+
+        private byte[] Save1(OtdrDataKnownBlocks sorData)
+        {
+            sorData.GeneralParameters.Language = LanguageCode.Utf8;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                System.IO.BinaryWriter w = new System.IO.BinaryWriter(ms);
+                OpxSerializer opxSerializer = new OpxSerializer(
+                    new Optixsoft.SharedCommons.SorSerialization.BinaryWriter(w, sorData.GeneralParameters.Language.GetEncoding()), (IFixer)new FixDistancesContext(sorData.FixedParameters));
+
+                opxSerializer.Serialize(sorData.RftsEvents, 204);
+                return ms.ToArray();
+            }
         }
 
         private void CompareOneLevel(OtdrDataKnownBlocks baseSorData, ref OtdrDataKnownBlocks measSorData,  MoniLevelType type, MoniResult moniResult)
