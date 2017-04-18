@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using Optixsoft.SharedCommons.SorSerialization;
 using Optixsoft.SorExaminer.OtdrDataFormat;
 using Optixsoft.SorExaminer.OtdrDataFormat.IO;
@@ -56,15 +55,6 @@ namespace IitOtdrLibrary
 
         public MoniResult CompareMeasureWithBase(byte[] baseBuffer, byte[] measBuffer, bool includeBase)
         {
-            //
-            var bytes = File.ReadAllBytes(@"c:\temp\MeasWithBase1_5.sor");
-            var sorData = SorData.FromBytes(bytes);
-
-//            var bytes1 = File.ReadAllBytes(@"c:\temp\MeasWithBase.sor");
-//            var sorData1 = SorData.FromBytes(bytes1);
-            //
-
-
             MoniResult moniResult = new MoniResult();
 
             var baseSorData = SorData.FromBytes(baseBuffer);
@@ -85,17 +75,18 @@ namespace IitOtdrLibrary
                 {
                     baseSorData.RftsParameters.ActiveLevelIndex = i;
                     CompareOneLevel(baseSorData, ref measSorData, GetMoniLevelType(rftsLevel.LevelName), moniResult);
-//                    byte[] rftsEventsBytes = Save1(measSorData);
-//                    embeddedData.Add(
-//                        new EmbeddedData()
-//                        {
-//                            Description = "RFTSEVENTS",
-//                            BlockId = "",
-//                            Comment = "",
-//                            DataSize = rftsEventsBytes.Length,
-//                            Data = rftsEventsBytes
-//                        }
-//                    );
+
+                    byte[] rftsEventsBytes = Save1(measSorData);
+                    embeddedData.Add(
+                        new EmbeddedData()
+                        {
+                            Description = "RFTSEVENTS",
+                            BlockId = "",
+                            Comment = "",
+                            DataSize = rftsEventsBytes.Length,
+                            Data = rftsEventsBytes
+                        }
+                    );
                 }
             }
 
@@ -111,11 +102,18 @@ namespace IitOtdrLibrary
 
             using (MemoryStream ms = new MemoryStream())
             {
+                
                 System.IO.BinaryWriter w = new System.IO.BinaryWriter(ms);
                 OpxSerializer opxSerializer = new OpxSerializer(
-                    new Optixsoft.SharedCommons.SorSerialization.BinaryWriter(w, sorData.GeneralParameters.Language.GetEncoding()), (IFixer)new FixDistancesContext(sorData.FixedParameters));
+                    new Optixsoft.SharedCommons.SorSerialization.BinaryWriter(w, sorData.GeneralParameters.Language.GetEncoding()), new FixDistancesContext(sorData.FixedParameters));
 
-                opxSerializer.Serialize(sorData.RftsEvents, 204);
+                var otdrBlock = new OtdrBlock(sorData.RftsEvents);
+                var list = new List<OtdrBlock>() {otdrBlock};
+                list.UpdateBlocks(otdrBlock.RevisionNumber);
+
+                w.Write((ushort)otdrBlock.RevisionNumber);
+
+                opxSerializer.Serialize(otdrBlock.Body, otdrBlock.RevisionNumber);
                 return ms.ToArray();
             }
         }
