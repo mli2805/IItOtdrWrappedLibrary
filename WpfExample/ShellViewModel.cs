@@ -319,8 +319,8 @@ namespace WpfExample
                 }
                 c++;
             }
-
         }
+
         public void StopCycle()
         {
             lock (_cycleLockOb)

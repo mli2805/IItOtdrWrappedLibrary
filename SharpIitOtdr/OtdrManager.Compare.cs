@@ -55,18 +55,28 @@ namespace IitOtdrLibrary
 
         public MoniResult CompareMeasureWithBase(byte[] baseBuffer, byte[] measBuffer, bool includeBase)
         {
-            MoniResult moniResult = new MoniResult();
-
             var baseSorData = SorData.FromBytes(baseBuffer);
             var measSorData = SorData.FromBytes(measBuffer);
             measSorData.IitParameters.Parameters = baseSorData.IitParameters.Parameters;
 
-            var levelCount = baseSorData.RftsParameters.LevelsCount;
-            _rtuLogger.AppendLine($"Comparison begin. Level count = {levelCount}");
-
             var embeddedData = new List<EmbeddedData>();
             if (includeBase)
                 embeddedData.Add(BaseBufferToEmbeddedData(baseBuffer));
+
+            MoniResult moniResult = Compare(baseSorData, measSorData, embeddedData);
+
+            measSorData.EmbeddedData.EmbeddedDataBlocks = embeddedData.ToArray();
+            measSorData.EmbeddedData.EmbeddedBlocksCount = (ushort)embeddedData.Count;
+            measSorData.Save(@"c:\temp\MeasWithBase.sor");
+            return moniResult;
+        }
+
+        private MoniResult Compare(OtdrDataKnownBlocks baseSorData, OtdrDataKnownBlocks measSorData, List<EmbeddedData> embeddedData)
+        {
+            MoniResult moniResult = new MoniResult();
+
+            var levelCount = baseSorData.RftsParameters.LevelsCount;
+            _rtuLogger.AppendLine($"Comparison begin. Level count = {levelCount}");
 
             for (int i = 0; i < levelCount; i++)
             {
@@ -75,44 +85,41 @@ namespace IitOtdrLibrary
                 {
                     baseSorData.RftsParameters.ActiveLevelIndex = i;
                     CompareOneLevel(baseSorData, ref measSorData, GetMoniLevelType(rftsLevel.LevelName), moniResult);
-
-                    byte[] rftsEventsBytes = Save1(measSorData);
-                    embeddedData.Add(
-                        new EmbeddedData()
-                        {
-                            Description = "RFTSEVENTS",
-                            BlockId = "",
-                            Comment = "",
-                            DataSize = rftsEventsBytes.Length,
-                            Data = rftsEventsBytes
-                        }
-                    );
+                    embeddedData.Add(RftsEventsToEmbeddedData(measSorData));
                 }
             }
-
-            measSorData.EmbeddedData.EmbeddedDataBlocks = embeddedData.ToArray();
-            measSorData.EmbeddedData.EmbeddedBlocksCount = (ushort)embeddedData.Count;
-            measSorData.Save(@"c:\temp\MeasWithBase.sor");
             return moniResult;
         }
 
-        private byte[] Save1(OtdrDataKnownBlocks sorData)
+
+        private EmbeddedData RftsEventsToEmbeddedData(OtdrDataKnownBlocks sorData)
+        {
+            byte[] rftsEventsBytes = RftsEventsToBytes(sorData);
+            return new EmbeddedData()
+            {
+                Description = "RFTSEVENTS",
+                BlockId = "",
+                Comment = "",
+                DataSize = rftsEventsBytes.Length,
+                Data = rftsEventsBytes
+            };
+        }
+        private byte[] RftsEventsToBytes(OtdrDataKnownBlocks sorData)
         {
             sorData.GeneralParameters.Language = LanguageCode.Utf8;
-
             using (MemoryStream ms = new MemoryStream())
             {
-                
                 System.IO.BinaryWriter w = new System.IO.BinaryWriter(ms);
                 OpxSerializer opxSerializer = new OpxSerializer(
-                    new Optixsoft.SharedCommons.SorSerialization.BinaryWriter(w, sorData.GeneralParameters.Language.GetEncoding()), new FixDistancesContext(sorData.FixedParameters));
+                    new Optixsoft.SharedCommons.SorSerialization.BinaryWriter(
+                        w, sorData.GeneralParameters.Language.GetEncoding()), 
+                        new FixDistancesContext(sorData.FixedParameters));
 
                 var otdrBlock = new OtdrBlock(sorData.RftsEvents);
                 var list = new List<OtdrBlock>() {otdrBlock};
                 list.UpdateBlocks(otdrBlock.RevisionNumber);
 
                 w.Write((ushort)otdrBlock.RevisionNumber);
-
                 opxSerializer.Serialize(otdrBlock.Body, otdrBlock.RevisionNumber);
                 return ms.ToArray();
             }
@@ -130,8 +137,6 @@ namespace IitOtdrLibrary
             var measIntPtr = IitOtdr.SetSorData(SorData.ToBytes(measSorData));
             var returnCode = IitOtdr.CompareActiveLevel(measIntPtr);
 
-            _rtuLogger.AppendLine($"Level {type} comparison result = {returnCode}!");
-
             var size = IitOtdr.GetSorDataSize(measIntPtr);
             byte[] buffer = new byte[size];
             IitOtdr.GetSordata(measIntPtr, buffer, size);
@@ -139,6 +144,8 @@ namespace IitOtdrLibrary
 
             moniLevel.IsLevelFailed = (measSorData.RftsEvents.Results & MonitoringResults.IsFailed) != 0;
             moniResult.Levels.Add(moniLevel);
+
+            _rtuLogger.AppendLine($"Level {type} comparison result = {returnCode}!");
 
             SetMoniResultFlags(moniResult, returnCode);
 
