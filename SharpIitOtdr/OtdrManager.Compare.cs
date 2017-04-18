@@ -63,7 +63,7 @@ namespace IitOtdrLibrary
             if (includeBase)
                 embeddedData.Add(BaseBufferToEmbeddedData(baseBuffer));
 
-            MoniResult moniResult = Compare(baseSorData, measSorData, embeddedData);
+            MoniResult moniResult = Compare(baseSorData, ref measSorData, embeddedData);
 
             measSorData.EmbeddedData.EmbeddedDataBlocks = embeddedData.ToArray();
             measSorData.EmbeddedData.EmbeddedBlocksCount = (ushort)embeddedData.Count;
@@ -71,7 +71,7 @@ namespace IitOtdrLibrary
             return moniResult;
         }
 
-        private MoniResult Compare(OtdrDataKnownBlocks baseSorData, OtdrDataKnownBlocks measSorData, List<EmbeddedData> embeddedData)
+        private MoniResult Compare(OtdrDataKnownBlocks baseSorData, ref OtdrDataKnownBlocks measSorData, List<EmbeddedData> embeddedData)
         {
             MoniResult moniResult = new MoniResult();
 
