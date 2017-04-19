@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Optixsoft.SorExaminer.OtdrDataFormat;
 using Optixsoft.SorExaminer.OtdrDataFormat.Structures;
 
@@ -29,8 +30,15 @@ namespace WpfExample
 
         private void PopulateTable()
         {
-            
+            DataRow newRow = BindableTable.NewRow();
+            newRow["Parameters"] = "Landmark Name";
+            BindableTable.Rows.Add(newRow);
+
+            newRow = BindableTable.NewRow();
+            newRow["Parameters"] = "Landmark Type";
+            BindableTable.Rows.Add(newRow);
         }
+
         private void CreateTable()
         {
             BindableTable = new DataTable();
