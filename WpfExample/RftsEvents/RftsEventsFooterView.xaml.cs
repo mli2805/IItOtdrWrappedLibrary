@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace WpfExample
+﻿namespace WpfExample
 {
     /// <summary>
     /// Interaction logic for RftsEventsFooterView.xaml
     /// </summary>
-    public partial class RftsEventsFooterView : UserControl
+    public partial class RftsEventsFooterView
     {
         public RftsEventsFooterView()
         {

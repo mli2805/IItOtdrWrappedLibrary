@@ -5,8 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wpfExample="clr-namespace:WpfExample"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance wpfExample:RftsEventsOneLevelViewModel}">
-    <DockPanel>
-        <wpfExample:RftsEventsOneLevelEeltView DockPanel.Dock="Bottom" DataContext="{Binding EeltViewModel}"/>
-        <DataGrid Name="DataGrid" ItemsSource="{Binding BindableTable}" FrozenColumnCount="1" IsReadOnly="True"/>
-    </DockPanel>
+    <StackPanel>
+        <DataGrid Name="EventsDataGrid" ItemsSource="{Binding BindableTable}" FrozenColumnCount="1" IsReadOnly="True" 
+                  Margin="5" Background="White" HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray" LoadingRow="EventsDataGrid_LoadingRow">
+            
+        </DataGrid>
+        <wpfExample:RftsEventsOneLevelEeltView DataContext="{Binding EeltViewModel}" Margin="5"/>
+    </StackPanel>
 </UserControl>

@@ -4,8 +4,6 @@ namespace WpfExample
 {
     public class RftsEventsFooterViewModel
     {
-        private readonly OtdrDataKnownBlocks _sorData;
-
         public string State { get; set; }
         public double Orl { get; set; }
 
@@ -22,9 +20,7 @@ namespace WpfExample
 
         public RftsEventsFooterViewModel(OtdrDataKnownBlocks sorData)
         {
-            _sorData = sorData;
-
-            Orl = _sorData.KeyEvents.OpticalReturnLoss;
+            Orl = sorData.KeyEvents.OpticalReturnLoss;
             var rftsParameters = sorData.RftsParameters;
 
             for (int i = 0; i < rftsParameters.LevelsCount; i++)
