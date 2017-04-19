@@ -15,6 +15,8 @@ namespace WpfExample
         public RftsEventsOneLevelViewModel CriticalLevelViewModel { get; set; }
         public RftsEventsOneLevelViewModel UsersLevelViewModel { get; set; }
 
+        public RftsEventsFooterViewModel FooterViewModel { get; set; }
+
         public RftsEventsViewModel(OtdrDataKnownBlocks sorData)
         {
             var rftsParameters = sorData.RftsParameters;
@@ -42,7 +44,7 @@ namespace WpfExample
                 }
             }
 
-
+            FooterViewModel = new RftsEventsFooterViewModel(sorData);
         }
 
         protected override void OnViewLoaded(object view)

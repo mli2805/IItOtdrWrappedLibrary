@@ -5,14 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpfExample="clr-namespace:WpfExample"
         mc:Ignorable="d"
-        Height="300" Width="700" d:DataContext="{d:DesignInstance wpfExample:RftsEventsViewModel}">
+        Height="300" Width="700" WindowStartupLocation="CenterOwner"
+        d:DataContext="{d:DesignInstance wpfExample:RftsEventsViewModel}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
     <DockPanel>
-        <GroupBox DockPanel.Dock="Bottom">
-            <TextBlock Text="Common information"></TextBlock>
-        </GroupBox>
+        <wpfExample:RftsEventsFooterView DockPanel.Dock="Bottom" DataContext="{Binding FooterViewModel}"/>
         <TabControl>
             <TabItem Name="Minor" Visibility="{Binding IsMinorExists, Converter={StaticResource BoolToVis}}">
                 <TabItem.Header>

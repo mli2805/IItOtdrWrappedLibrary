@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace WpfExample
+﻿namespace WpfExample
 {
     /// <summary>
     /// Interaction logic for RftsEventsOneLevelEeltView.xaml
