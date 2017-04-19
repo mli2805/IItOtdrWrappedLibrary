@@ -95,22 +95,22 @@
       <DependentUpon>OtdrParamView.xaml</DependentUpon>
     </Compile>
     <Compile Include="OtdrParamViewModel.cs" />
-    <Compile Include="RftsEventsFooterView.xaml.cs">
+    <Compile Include="RftsEvents\RftsEventsFooterView.xaml.cs">
       <DependentUpon>RftsEventsFooterView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RftsEventsFooterViewModel.cs" />
-    <Compile Include="RftsEventsOneLevelEeltView.xaml.cs">
+    <Compile Include="RftsEvents\RftsEventsFooterViewModel.cs" />
+    <Compile Include="RftsEvents\RftsEventsOneLevelEeltView.xaml.cs">
       <DependentUpon>RftsEventsOneLevelEeltView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RftsEventsOneLevelEeltViewModel.cs" />
-    <Compile Include="RftsEventsOneLevelView.xaml.cs">
+    <Compile Include="RftsEvents\RftsEventsOneLevelEeltViewModel.cs" />
+    <Compile Include="RftsEvents\RftsEventsOneLevelView.xaml.cs">
       <DependentUpon>RftsEventsOneLevelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RftsEventsOneLevelViewModel.cs" />
-    <Compile Include="RftsEventsView.xaml.cs">
+    <Compile Include="RftsEvents\RftsEventsOneLevelViewModel.cs" />
+    <Compile Include="RftsEvents\RftsEventsView.xaml.cs">
       <DependentUpon>RftsEventsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RftsEventsViewModel.cs" />
+    <Compile Include="RftsEvents\RftsEventsViewModel.cs" />
     <Compile Include="ShellViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -121,19 +121,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RftsEventsFooterView.xaml">
+    <Page Include="RftsEvents\RftsEventsFooterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RftsEventsOneLevelEeltView.xaml">
+    <Page Include="RftsEvents\RftsEventsOneLevelEeltView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RftsEventsOneLevelView.xaml">
+    <Page Include="RftsEvents\RftsEventsOneLevelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RftsEventsView.xaml">
+    <Page Include="RftsEvents\RftsEventsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
