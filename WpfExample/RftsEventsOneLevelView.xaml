@@ -8,8 +8,6 @@
              >
     <DockPanel>
         <wpfExample:RftsEventsOneLevelEeltView DockPanel.Dock="Bottom" DataContext="{Binding EeltViewModel}"/>
-        <GroupBox Header="{Binding ComparisonResult}">
-
-        </GroupBox>
+        <DataGrid Name="DataGrid" ItemsSource="{Binding BindableTable}" FrozenColumnCount="1" IsReadOnly="True"/>
     </DockPanel>
 </UserControl>
