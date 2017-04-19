@@ -15,8 +15,8 @@ namespace IitOtdrLibrary
         NoBase                 = 71,
         DoingAutoMonitor       = 81,
         NoService              = 82,
-        ReturnNolink           = 10002,
+        NoLink                 = 10002,
         Noactlevel             = 10003,
-        ReturnFiberbreak       = 10004,
+        FiberBreak             = 10004,
     }
 }

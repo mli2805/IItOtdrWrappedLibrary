@@ -336,5 +336,14 @@ namespace WpfExample
             OtdrManager.InterruptMeasurement();
             Message = "Stop command is sent";
         }
+
+        public void ShowRftsEvents()
+        {
+            var buffer = File.ReadAllBytes(@"c:\temp\measwithbase.sor");
+            var sorData = SorData.FromBytes(buffer);
+            var vm = new RftsEventsViewModel(sorData);
+            IWindowManager windowManager = new WindowManager();
+            windowManager.ShowDialog(vm);
+        }
     }
 }

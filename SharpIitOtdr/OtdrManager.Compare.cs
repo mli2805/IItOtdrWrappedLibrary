@@ -31,10 +31,10 @@ namespace IitOtdrLibrary
             {
                 case ComparisonReturns.Ok:
                     break;
-                case ComparisonReturns.ReturnFiberbreak:
+                case ComparisonReturns.FiberBreak:
                     moniResult.IsFiberBreak = true;
                     break;
-                case ComparisonReturns.ReturnNolink:
+                case ComparisonReturns.NoLink:
                     moniResult.IsNoFiber = true;
                     break;
                 default:
@@ -145,7 +145,8 @@ namespace IitOtdrLibrary
             moniLevel.IsLevelFailed = (measSorData.RftsEvents.Results & MonitoringResults.IsFailed) != 0;
             moniResult.Levels.Add(moniLevel);
 
-            _rtuLogger.AppendLine($"Level {type} comparison result = {returnCode}!");
+            var levelResult = returnCode != ComparisonReturns.Ok ? returnCode.ToString() : moniLevel.IsLevelFailed ? "Failed!" : "OK!";
+            _rtuLogger.AppendLine($"Level {type} comparison result = {levelResult}!");
 
             SetMoniResultFlags(moniResult, returnCode);
 

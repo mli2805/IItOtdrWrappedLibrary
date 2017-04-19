@@ -10,6 +10,8 @@ namespace IitOtdrLibrary
 
         public List<MoniLevel> Levels { get; set; } = new List<MoniLevel>();
 
+        public ComparisonReturns Result { get; set; }
+
     }
 
     public class MoniLevel
