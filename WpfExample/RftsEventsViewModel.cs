@@ -25,19 +25,19 @@ namespace WpfExample
                 {
                     case RftsLevelType.Minor:
                         IsMinorExists = true;
-                        MinorLevelViewModel = new RftsEventsOneLevelViewModel(level);
+                        MinorLevelViewModel = new RftsEventsOneLevelViewModel(sorData, level);
                         break;
                     case RftsLevelType.Major:
                         IsMajorExists = true;
-                        MajorLevelViewModel = new RftsEventsOneLevelViewModel(level);
+                        MajorLevelViewModel = new RftsEventsOneLevelViewModel(sorData, level);
                         break;
                     case RftsLevelType.Critical:
                         IsCriticalExists = true;
-                        CriticalLevelViewModel = new RftsEventsOneLevelViewModel(level);
+                        CriticalLevelViewModel = new RftsEventsOneLevelViewModel(sorData, level);
                         break;
                     case RftsLevelType.None:
                         IsUsersExists = true;
-                        UsersLevelViewModel = new RftsEventsOneLevelViewModel(level);
+                        UsersLevelViewModel = new RftsEventsOneLevelViewModel(sorData, level);
                         break;
                 }
             }

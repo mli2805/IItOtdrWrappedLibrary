@@ -95,6 +95,10 @@
       <DependentUpon>OtdrParamView.xaml</DependentUpon>
     </Compile>
     <Compile Include="OtdrParamViewModel.cs" />
+    <Compile Include="RftsEventsOneLevelEeltView.xaml.cs">
+      <DependentUpon>RftsEventsOneLevelEeltView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RftsEventsOneLevelEeltViewModel.cs" />
     <Compile Include="RftsEventsOneLevelView.xaml.cs">
       <DependentUpon>RftsEventsOneLevelView.xaml</DependentUpon>
     </Compile>
@@ -110,6 +114,10 @@
     </Compile>
     <Compile Include="WaitCursor.cs" />
     <Page Include="OtdrParamView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RftsEventsOneLevelEeltView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
