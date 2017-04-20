@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using IitOtdrLibrary;
-using Iit.Fibertest.Utils;
+using Iit.Fibertest.Utils35;
 
 namespace ConsoleApp
 {

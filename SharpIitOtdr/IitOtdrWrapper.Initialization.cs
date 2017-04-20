@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Iit.Fibertest.Utils;
+using Iit.Fibertest.Utils35;
 
 namespace IitOtdrLibrary
 {

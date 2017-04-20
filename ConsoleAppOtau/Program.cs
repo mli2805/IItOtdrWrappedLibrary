@@ -1,6 +1,6 @@
 ﻿using System;
 using DirectCharonLibrary;
-using Iit.Fibertest.Utils;
+using Iit.Fibertest.Utils35;
 
 namespace ConsoleAppOtau
 {
