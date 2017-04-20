@@ -14,7 +14,7 @@ namespace WpfExample
 
         public RftsEventsOneLevelViewModel(OtdrDataKnownBlocks sorData, RftsLevel rftsLevel)
         {
-            var lines = new SorDataParser(sorData).Parse();
+            var lines = new SorDataParser(sorData).Parse(rftsLevel.LevelName);
             CreateTable(lines.First().Value.Length-1);
             PopulateTable(lines);
             EeltViewModel = new RftsEventsOneLevelEeltViewModel(rftsLevel, sorData.KeyEvents.EndToEndLoss);

@@ -12,14 +12,7 @@ namespace WpfExample
         public RftsEventsOneLevelEeltViewModel(RftsLevel rftsLevel, double value)
         {
             AttenuationValue = value;
-            var thresholdValue = rftsLevel.EELT.IsAbsolute
-                ? rftsLevel.EELT.AbsoluteThreshold / 1000.0
-                : rftsLevel.EELT.RelativeThreshold / 1000.0;
-            var thresholdType = rftsLevel.EELT.IsAbsolute ? "(abs.)" : "(rel.)";
-
-            Threshold = string.Format( $"{thresholdValue: 0.000} {thresholdType}"); 
-
-
+            Threshold = rftsLevel.EELT.ForTable();
         }
     }
 }

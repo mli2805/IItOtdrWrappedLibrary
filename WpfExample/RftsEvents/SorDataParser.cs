@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using Optixsoft.SorExaminer.OtdrDataFormat;
+using Optixsoft.SorExaminer.OtdrDataFormat.Structures;
 
 namespace WpfExample
 {
@@ -51,17 +54,50 @@ namespace WpfExample
             return eventTable;
         }
 
-        public Dictionary<int, string[]> Parse()
+        public Dictionary<int, string[]> Parse(RftsLevelType rftsLevel)
         {
             _eventCount = _sorData.LinkParameters.LandmarksCount;
             var eventTable = PrepareEmptyDictionary();
+
+            ParseCommonInformation(eventTable);
+            ParseCurrentMeasurement(eventTable);
+            ParseMonitoringThresholds(eventTable, rftsLevel);
+            ParseDeviationFromBase(eventTable);
+            return eventTable;
+        }
+
+        private void ParseCommonInformation(Dictionary<int, string[]> eventTable)
+        {
             for (int i = 0; i < _eventCount; i++)
             {
                 eventTable[101][i + 1] = _sorData.LinkParameters.LandmarkBlocks[i].Comment;
                 eventTable[102][i + 1] = _sorData.LinkParameters.LandmarkBlocks[i].Code.ForTable();
                 eventTable[106][i + 1] = _sorData.RftsEvents.Events[i].EventTypes.ForTable();
             }
-            return eventTable;
+        }
+        private void ParseCurrentMeasurement(Dictionary<int, string[]> eventTable)
+        {
+            for (int i = 0; i < _eventCount; i++)
+            {
+                eventTable[201][i + 1] = _sorData.KeyEvents.KeyEvents[i].EventReflectance.ToString(CultureInfo.CurrentCulture);
+                eventTable[202][i + 1] = _sorData.KeyEvents.KeyEvents[i].EventLoss.ToString(CultureInfo.CurrentCulture);
+            }
+        }
+
+        private void ParseMonitoringThresholds(Dictionary<int, string[]> eventTable, RftsLevelType rftsLevel)
+        {
+            var level = _sorData.RftsParameters.Levels.First(l => l.LevelName == rftsLevel);
+
+            for (int i = 0; i < _eventCount; i++)
+            {
+                eventTable[301][i + 1] = level.ThresholdSets[i].ReflectanceThreshold.ForTable();
+                eventTable[302][i + 1] = level.ThresholdSets[i].AttenuationThreshold.ForTable();
+                eventTable[303][i + 1] = level.ThresholdSets[i].AttenuationCoefThreshold.ForTable();
+            }
+        }
+
+        private void ParseDeviationFromBase(Dictionary<int, string[]> eventTable)
+        {
         }
 
 

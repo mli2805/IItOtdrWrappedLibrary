@@ -1,4 +1,5 @@
 using Optixsoft.SorExaminer.OtdrDataFormat;
+using Optixsoft.SorExaminer.OtdrDataFormat.Structures;
 
 namespace WpfExample
 {
@@ -25,5 +26,12 @@ namespace WpfExample
             return "unexpected input";
         }
 
+        public static string ForTable(this ShortThreshold threshold)
+        {
+            var value = threshold.IsAbsolute ? threshold.AbsoluteThreshold : threshold.RelativeThreshold;
+            var str = $"{value / 1000.0 : 0.000}";
+            var result = str + (threshold.IsAbsolute ? " (abs.)" : " (rel.)");
+            return result;
+        }
     }
 }
