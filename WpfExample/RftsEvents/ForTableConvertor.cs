@@ -33,5 +33,11 @@ namespace WpfExample
             var result = str + (threshold.IsAbsolute ? " (abs.)" : " (rel.)");
             return result;
         }
+
+        public static string ForTable(this ShortDeviation deviation)
+        {
+            var value = (deviation.Type & ShortDeviationTypes.IsCompared) != 0;
+            return "";
+        }
     }
 }
