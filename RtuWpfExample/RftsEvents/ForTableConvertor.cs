@@ -37,7 +37,7 @@ namespace RtuWpfExample
         public static string ForTable(this ShortDeviation deviation)
         {
             var value = (deviation.Type & ShortDeviationTypes.IsCompared) != 0;
-            return "";
+            return value ? "1" : "2";
         }
     }
 }
