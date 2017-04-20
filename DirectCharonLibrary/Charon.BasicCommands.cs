@@ -28,17 +28,29 @@ namespace DirectCharonLibrary
 
         private Dictionary<int, NetAddress> GetExtentedPorts()
         {
-            ReadIniFile();
-            if (!IsLastCommandSuccessful)
-                return null; // read iniFile error
+            try
+            {
+                ReadIniFile();
+                if (!IsLastCommandSuccessful)
+                    return null; // read iniFile error
 
-            if (LastAnswer.Substring(0, 15) == "ERROR_COMMAND\r\n")
-                return new Dictionary<int, NetAddress>(); // charon too old, know nothing about extensions
+                if (LastAnswer.Substring(0, 15) == "ERROR_COMMAND\r\n")
+                    return new Dictionary<int, NetAddress>(); // charon too old, know nothing about extensions
 
-            if (LastAnswer.Substring(0, 22) == "[OpticalPortExtension]")
-                return ParseIniContent(LastAnswer);
+                if (LastAnswer.Substring(0, 22) == "[OpticalPortExtension]")
+                    return ParseIniContent(LastAnswer);
 
-            return new Dictionary<int, NetAddress>();
+                return new Dictionary<int, NetAddress>();
+            }
+            catch (Exception e)
+            {
+                if (IsLastCommandSuccessful)
+                {
+                    IsLastCommandSuccessful = false;
+                    LastErrorMessage = "GetExtentedPorts failed!";
+                }
+                return null; 
+            }
         }
 
         private Dictionary<int, NetAddress> ParseIniContent(string content)

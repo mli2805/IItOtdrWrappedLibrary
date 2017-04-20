@@ -9,6 +9,7 @@ namespace ConsoleAppOtau
         private static Logger _rtuLogger;
         static void Main()
         {
+            Console.WriteLine("rtu.log");
             _rtuLogger = new Logger("rtu.log");
 //          const string serverIp = "192.168.88.101";
             const string serverIp = "192.168.96.52";
@@ -49,6 +50,7 @@ namespace ConsoleAppOtau
                 _rtuLogger.AppendLine($"attached successfully");
             else _rtuLogger.AppendLine($"{ch.LastErrorMessage}");
 
+            Console.WriteLine("Done. Press Enter.");
             Console.ReadLine();
         }
     }
